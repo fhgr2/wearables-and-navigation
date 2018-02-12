@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>OpenRouteService</title>
+</head>
+<body>
+	<p>Only console output</p>
+	<script>
+		/* Variables */
+		var request, url;	// HTTP Request, URL to fetch data
+		var from, to;		// Start and End Point
+		var instructions;	// Instructions from data
+		var way_points;		// Final array with long, lat, instruction, heading
+		var consOutput;		// Console output
+
+		request = new XMLHttpRequest();
+		/* Bahnhof - Medienhaus */
+		from	=	'9.527022,46.853450';
+		to		=	'9.501288,46.847791';
+
+		/* Chur - Zürich */
+		//from	=	'9.714747,46.470630';  
+		//to		=	'8.537700, 47.381371';
+
+		url =   'https://api.openrouteservice.org/directions?';
+		url	+=	'api_key=58d904a497c67e00015b45fc4fa302e374824c5486e5ca8ff7ff598b';
+		url	+=	'&coordinates=' + from + '|' + to;
+		url	+=	'&profile=cycling-road';
+		url	+=	'&geometry=true&geometry_simplify=false&geometry_format=geojson';
+		url	+=	'&instructions=true&units=m';	
+		// Values profile: cycling-regular, cycling-road, cycling-safe, cycling-mountain, cycling-tour, cycling-electric
+		
+		request.open('GET', url);
+
+		request.setRequestHeader('Accept', 'text/json; charset=utf-8');
+		request.onreadystatechange = function () {
+			if (this.readyState === 4) {
+				json = JSON.parse(this.responseText);
+				leng = json.routes[0].geometry.coordinates.length
+
+				// create and fill instructions array
+				instructions = new Array();
+				for ( i = 0; i <  leng; i++ ) {
+					for ( j = 0; j < json.routes[0].segments[0].steps.length; j ++ ) {
+						tmpCondOne = json.routes[0].segments[0].steps[j].way_points[0];
+						tmpCondTwo = json.routes[0].segments[0].steps[j].way_points[1];
+						for ( k = tmpCondOne; k < tmpCondTwo; k ++ ) {
+							// add instruction only for last way_point
+							if ( k == json.routes[0].segments[0].steps[j].way_points[1]-1){
+								instructions[i] =  ', ';
+								instructions[i] += json.routes[0].segments[0].steps[j].instruction;
+								instructions[i] += ', to ';
+								instructions[i] += json.routes[0].segments[0].steps[j].distance;
+								instructions[i] += 'm: ';
+							} else {
+								instructions[i] = '';
+							}
+							i++;
+						}
+					}
+				}
+				// add last one
+				instructions[leng-1] = json.routes[0].segments[0].steps[j-1].instruction;
+
+				// output instructions array
+				console.log("Length instructions: " + instructions.length);
+
+				// create and fill way_points array
+				way_points = new Array();
+				for ( i = 0; i < leng; i++ ) {
+					way_points[i] = new Object();
+					way_points[i][ 'long']	=			json.routes[0].geometry.coordinates[i][0];
+					way_points[i][ 'lat' ]	=			json.routes[0].geometry.coordinates[i][1];
+					way_points[i][ 'instruction' ] =	instructions[i];
+					// Heading
+					if ( i < leng -1) {
+						headingLong =  json.routes[0].geometry.coordinates[(i+1)][0];
+						headingLong -= json.routes[0].geometry.coordinates[i][0];
+						headingLat =   json.routes[0].geometry.coordinates[i+1][1];
+						headingLat -=  json.routes[0].geometry.coordinates[i][1];
+						// tanα = a : b => tanα = lat : long; Math.atan2(y, x), measured in Radiants
+						heading = Math.atan2( headingLat, headingLong ) * 180 / Math.PI;
+						way_points[i][ 'heading' ] = heading;
+					} else {
+						way_points[i][ 'heading' ] = '';
+					}
+
+				}
+
+				// output way_points array
+				// console.log("Length way_points: " + way_points.length);
+				consOutput = '';
+				for ( i = 0; i < way_points.length; i++ ) {
+					consOutput =  way_points[i][ 'lat' ];
+					consOutput += ', ';
+					consOutput += way_points[i][ 'long' ];
+					consOutput += ', Angle: ';
+					consOutput += way_points[i][ 'heading' ];
+					consOutput += way_points[i][ 'instruction' ];
+					console.log ( consOutput );
+				}
+				// Testing purposes only
+				console.log('Body:', this.responseText);
+				console.log(json);
+			}
+		};
+		request.send();
+	</script>
+</body>
+</html>
