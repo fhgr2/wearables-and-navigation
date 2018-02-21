@@ -1,0 +1,6 @@
+#draggable {left: 1290px; top: 128px; width: 30px; height: 30px; padding: 0; position: absolute; background-image: url(../img/marker.jpg); background-repeat: no-repeat; }
+#messages { top: 600px; left: 50px; width: 350px; height: 150px; position: absolute;}
+body {margin: 0; background-image: url(../img/plan.JPG); background-repeat: no-repeat;}
+.red {background-color: red;}
+.green {background-color: green;}
+.orange {background-color: orange;}

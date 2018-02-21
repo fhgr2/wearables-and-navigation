@@ -1,36 +1,65 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset='UTF-8'>
     <title>OpenRouteService</title>
+	<link rel='stylesheet' href='css/jquery-ui.css'>
+	<link rel='stylesheet' href='css/simulation.css'>
+	<script src='js/jquery-1.12.4.js'></script>
+	<script src='js/jquery-ui.js'></script>
 </head>
 <body>
-	<p>Only console output</p>
+	<div id='draggable' class='ui-widget-content'>
+	  <p>&nbsp;</p>
+	</div>
+	<div id='messages'>
+		<p>Bahnhof: 46,853450, 9,527022;<br>Plessur: 46,852157, 9.520158</p>
+		<p id='lat'>lat</p>
+		<p id='long'>long</p>
+		<p id='status' class='green'>Status</p>
+		<p id='instruction'>Instruktion</p>
+	</div>
 	<script>
 		/* Variables */
-		var request, url;	// HTTP Request, URL to fetch data
-		var from, to;		// Start and End Point
-		var instructions;	// Instructions from data
-		var way_points;		// Final array with long, lat, instruction, heading
-		var consOutput;		// Console output
+		var request, url;						// HTTP Request, URL to fetch data
+		var fromLong, toLong;					// Start and End Point Longitude
+		var fromLat, toLat;						// Start and End Point Latiitude
+		var instructions;						// Instructions from data
+		var way_points = new Array();			// Final array with long, lat, instruction, heading
+		var consOutput;							// Console output
+		var shdPosLat, shdPosLong				// Actual points («should»)
+		
+		// Lat und Log Position of rectangle on map simulation
+		var simMapLat = 46.852157 + (1290 * 0.000001);
+		var simMapLong = 9.520158 + (504-128) * 0.00001865;
+		var simMapAccLat = 	0.0001;				// Lat Accuracy for map simulation, ca. 1*11m =   11m
+		var simMapAccLong = 0.0001;				// Long Accuracy for map simulation, ca. 1*7,6m = 8m
+		var simError = 0;						// simulation Error
 
 		request = new XMLHttpRequest();
 		/* Bahnhof - Medienhaus */
-		from	=	'9.527022,46.853450';
-		to		=	'9.501288,46.847791';
+		fromLat		=	'46.853450';
+		fromLong	=	'9.527022';
+		toLat		=	'46.847791';
+		toLong		=	'9.501288';
 
+		/* Bahnhof - Medienhaus */
+		//from	=	'9.527022,46.853450';
+		//to		=	'9.501288,46.847791';
+		
 		/* Chur - Zürich */
 		//from	=	'9.714747,46.470630';  
-		//to		=	'8.537700, 47.381371';
+		//to	=	'8.537700, 47.381371';
 
 		url =   'https://api.openrouteservice.org/directions?';
 		url	+=	'api_key=58d904a497c67e00015b45fc4fa302e374824c5486e5ca8ff7ff598b';
-		url	+=	'&coordinates=' + from + '|' + to;
+		url	+=	'&coordinates=' + fromLong + ',' + fromLat;			// Pipe (|) separated List of longitude,latitude
+		url +=  '|' + toLong + ',' + toLat;
 		url	+=	'&profile=cycling-road';
 		url	+=	'&geometry=true&geometry_simplify=false&geometry_format=geojson';
 		url	+=	'&instructions=true&units=m';	
 		// Values profile: cycling-regular, cycling-road, cycling-safe, cycling-mountain, cycling-tour, cycling-electric
-		
+		console.log(url);
 		request.open('GET', url);
 
 		request.setRequestHeader('Accept', 'text/json; charset=utf-8');
@@ -46,13 +75,15 @@
 						tmpCondOne = json.routes[0].segments[0].steps[j].way_points[0];
 						tmpCondTwo = json.routes[0].segments[0].steps[j].way_points[1];
 						for ( k = tmpCondOne; k < tmpCondTwo; k ++ ) {
-							// add instruction only for last way_point
-							if ( k == json.routes[0].segments[0].steps[j].way_points[1]-1){
-								instructions[i] =  ', ';
-								instructions[i] += json.routes[0].segments[0].steps[j].instruction;
-								instructions[i] += ', to ';
-								instructions[i] += json.routes[0].segments[0].steps[j].distance;
-								instructions[i] += 'm: ';
+							// add instruction only for first way_point
+							// last would be .way_points[1]-1
+							if ( k == json.routes[0].segments[0].steps[j].way_points[0]) {
+								//instructions[i] =  ', ';
+								instructions[i] =  json.routes[0].segments[0].steps[j].instruction;
+								//instructions[i] += ', to ';
+								//instructions[i] += json.routes[0].segments[0].steps[j].distance;
+								//instructions[i] += 'm: ';
+								instructions[i] += ',' + json.routes[0].segments[0].steps[j].way_points
 							} else {
 								instructions[i] = '';
 							}
@@ -62,17 +93,17 @@
 				}
 				// add last one
 				instructions[leng-1] = json.routes[0].segments[0].steps[j-1].instruction;
-
+				
 				// output instructions array
-				console.log("Length instructions: " + instructions.length);
-
+				console.log('Length instructions: ' + instructions.length);
 				// create and fill way_points array
-				way_points = new Array();
+				//way_points = new Array();
 				for ( i = 0; i < leng; i++ ) {
 					way_points[i] = new Object();
 					way_points[i][ 'long']	=			json.routes[0].geometry.coordinates[i][0];
 					way_points[i][ 'lat' ]	=			json.routes[0].geometry.coordinates[i][1];
 					way_points[i][ 'instruction' ] =	instructions[i];
+					way_points[i][ 'position' ] =		false;
 					// Heading
 					if ( i < leng -1) {
 						headingLong =  json.routes[0].geometry.coordinates[(i+1)][0];
@@ -85,11 +116,10 @@
 					} else {
 						way_points[i][ 'heading' ] = '';
 					}
-
-				}
-
+				}				
+		
 				// output way_points array
-				// console.log("Length way_points: " + way_points.length);
+				// console.log('Length way_points: ' + way_points.length);
 				consOutput = '';
 				for ( i = 0; i < way_points.length; i++ ) {
 					consOutput =  way_points[i][ 'lat' ];
@@ -97,15 +127,111 @@
 					consOutput += way_points[i][ 'long' ];
 					consOutput += ', Angle: ';
 					consOutput += way_points[i][ 'heading' ];
-					consOutput += way_points[i][ 'instruction' ];
+					if (way_points[i][ 'instruction' ] != '') {
+						consOutput += ', ';
+						consOutput += way_points[i][ 'instruction' ];
+					}
 					console.log ( consOutput );
 				}
 				// Testing purposes only
-				console.log('Body:', this.responseText);
-				console.log(json);
+				//console.log('Body:', this.responseText);
+				//console.log(json);
+				
+				// Map Simulation: Set start point passed
+				way_points[0][ 'position' ] = true;
+				prevPosLat = fromLat;
+				prevPosLong= fromLong;
+				curPosLat =  simMapLat;
+				curPosLong =  simMapLong;
+				checkPos = setInterval(positionCheck, 100);    // 100
 			}
 		};
 		request.send();
+		
+		function positionCheck() {
+			for ( i = 0; i < way_points.length; i++ ) {
+				if (way_points[i][ 'position' ] === false) {
+					// First false position
+					break;
+				}
+			}
+			// Position
+			prevPosLat =  curPosLat;
+			prevPosLong = curPosLong;
+			curPosLat =  simMapLat;
+			curPosLong =  simMapLong;
+			
+			// heading
+			curHeadingLong =  curPosLong - prevPosLong;
+			curHeadingLat =   curPosLat -  prevPosLat;
+			//tanα = a : b => tanα = lat : long; Math.atan2(y, x), measured in Radiants
+			curHeading = Math.atan2( curHeadingLat, curHeadingLong ) * 180 / Math.PI;
+			//console.log ('Stand ' + i + ', ' + way_points.length)
+			goalHeading = way_points[i][ 'heading' ];
+
+			// Compare Points
+			shdPosLat =  way_points[i][ 'lat' ];
+			shdPosLong = way_points[i][ 'long' ];
+		
+			// Only when moving: Are we near way_points? If not, ist the direction/heading all right?
+			if (prevPosLat != curPosLat) {
+				console.log ('Ist: ' + curHeading + ', Soll: ' + goalHeading + ' bei i = ' + i);
+				if (shdPosLat < curPosLat + simMapAccLat && shdPosLat > curPosLat - simMapAccLat &&
+					shdPosLong < curPosLong + simMapAccLong && shdPosLong > curPosLong - simMapAccLong) {
+					// Near way_point
+					way_points[i][ 'position' ] = true;
+					simError = 0;
+					$( ' #status' ).removeClass( 'orange' );
+					$( ' #status' ).removeClass( 'red' );
+					$( ' #status' ).addClass( 'green' );
+				} else {
+					// Not near way_point, they could be far away. Correct heading?
+					if (Math.abs(curHeading - goalHeading) < 15) {
+						console.log('0-15°');
+						simError = simError + 0.5;		// tiny error				
+					} else if (Math.abs(curHeading - goalHeading) < 20){
+						console.log('15-20°');
+						simError = simError + 1;		// error
+					} else {
+						console.log('über 20°');
+						simError = simError + 2;		// huge error
+					}
+					
+					// Count errors
+					if (simError > 70) {	// in this case start a new request
+						$( ' #status' ).removeClass( 'orange' );
+						$( ' #status' ).removeClass( 'red' );
+						$( ' #status' ).removeClass( 'green' );
+						$( ' #status' ).addClass( 'red' );
+					} else if (simError > 40) {		
+						$( ' #status' ).removeClass( 'orange' );
+						$( ' #status' ).removeClass( 'red' );
+						$( ' #status' ).removeClass( 'green' );
+						$( ' #status' ).addClass( 'orange' );
+					}
+				}
+				console.log('Weg: ' + way_points[i][ 'instruction' ]);
+				$( '#instruction' ).text(way_points[i][ 'instruction' ]);
+			}
+			console.log(simError + ', i: ' + i)
+		}
+		
+		// Bahnhof: 46,853450, 9,527022; Plessur: 46,852157, 9,520158
+		// Image is 1290 x 504 px
+		// Difference Long is 0,006864 = 1290px [width]. 0=Left is Plessur, 1290 = Bahnhof
+		// Difference Lat is 0,001293 = 368px [measured in Photoshop]. 504= Bottom = Plessur
+		// top to Plessur: 136 px
+		$( function() {
+			$( '#draggable' ).draggable({
+				drag: function( event ) {
+					simMapLat = 	46.853450 - (parseInt($( this ).css('top')) / 368 * 0.001293) + 0.001293/368*136;
+					simMapLong =	(parseInt($( this ).css('left')) / 1290 * 0.006864) + 9.520158;
+					$( '#lat'  ).text('Lat ' + simMapLat);
+					$( '#long' ).text('#long').text('Long ' + simMapLong);
+				}
+			});
+		} );
 	</script>
+
 </body>
 </html>
