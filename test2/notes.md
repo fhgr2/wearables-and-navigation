@@ -22,3 +22,14 @@ Anhand einer GPX-Datei sollen Fake-GPS Daten erstellt werden. Dazu muss die GPX-
 ### Signal abholen
 
     cgps localhost:55555
+
+## Accountdaten
+
+### OpenRouteService
+
+```
+htw:***REMOVED***
+
+API-Key:
+***REMOVED***
+```
