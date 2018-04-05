@@ -4,7 +4,7 @@
 
 ```bash
 sudo apt install python-gps
-pip3 install gpsd-py3
+pip3 install gpsd-py3 Flask
 ```
 
 ## fake gpsd verwenden
@@ -23,6 +23,28 @@ Anhand einer GPX-Datei sollen Fake-GPS Daten erstellt werden. Dazu muss die GPX-
 
     cgps localhost:55555
 
+## Flask
+
+Flask ist ein in Python geschriebenes Webframework. Den eingebauten Webserver können wir wie folgt starten:
+
+Für die Entwicklung:
+
+
+```bash
+export FLASK_APP=flask-test.py
+export FLASK_DEBUG=1 # automatically reload changes from files
+python3 -m flask run
+```
+
+Für den Betrieb:
+
+
+```bash
+export FLASK_APP=flask-test.py
+python3 -m flask run --host=0.0.0.0
+```
+
+
 ## Accountdaten
 
 ### OpenRouteService
@@ -33,3 +55,7 @@ htw:***REMOVED***
 API-Key:
 ***REMOVED***
 ```
+
+## Python Webframework
+
+- Über background tasks: https://stackoverflow.com/questions/22615475/flask-application-with-background-threads/39008301
