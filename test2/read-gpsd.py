@@ -12,5 +12,5 @@ gpsd.connect(host="127.0.0.1", port=55555)
 # Get gps position
 packet = gpsd.get_current()
 
-# See the inline docs for GpsResponse for the available data
+# See the inline docs for GpsResponse for the available data: https://github.com/MartijnBraam/gpsd-py3/blob/master/DOCS.md
 print(packet.position())

@@ -23,6 +23,11 @@ Anhand einer GPX-Datei sollen Fake-GPS Daten erstellt werden. Dazu muss die GPX-
 
     cgps localhost:55555
 
+bzw.
+
+    read-gpsd.py
+   
+
 ## Flask
 
 Flask ist ein in Python geschriebenes Webframework. Den eingebauten Webserver können wir wie folgt starten:
@@ -44,6 +49,10 @@ export FLASK_APP=flask-test.py
 python3 -m flask run --host=0.0.0.0
 ```
 
+### Links
+
+- Über background tasks: https://stackoverflow.com/questions/22615475/flask-application-with-background-threads/39008301
+- requests.args.get gibt immer Strings zurück: https://teamtreehouse.com/community/what-does-requestargsget-return
 
 ## Accountdaten
 
@@ -56,6 +65,3 @@ API-Key:
 ***REMOVED***
 ```
 
-## Python Webframework
-
-- Über background tasks: https://stackoverflow.com/questions/22615475/flask-application-with-background-threads/39008301
