@@ -1,4 +1,5 @@
 from flask import Flask, request, abort, current_app
+import subprocess
 
 app = Flask(__name__)
 
@@ -18,11 +19,20 @@ def myrouter():
     # gute anleitung: https://stackoverflow.com/a/17809718
     # rtfm: https://docs.python.org/3/library/subprocess.html
 
-    old_lat = get_lat()
+    old_proc = get_proc()
+    old_pid = None
+    if old_proc != None and old_proc.poll() == None: # poll() == None means process is still alive
+        old_pid = str(old_proc.pid)
+        old_proc.terminate() # send SIGTERM
+        try:
+            returncode = old_proc.wait(timeout=3) # wait for SIGTERM taking effect
+        except subprocess.TimeoutExpired: # if SIGTERM wasn't successful
+            old_proc.kill()
 
-    set_lat(lat)
+    proc = subprocess.Popen(["./announcer-test.py", "myarg"])
+    set_proc(proc)
 
-    return "This is router. lat=" + str(lat) + " and lon=" + str(lon) + " and old_lat=" + str(old_lat)
+    return "This is router.<br>lat=" + str(lat) + "<br> lon=" + str(lon) + "<br> old_proc=" + str(old_proc) + "<br> proc=" + str(proc) + "<br> pid=" + str(proc.pid) + "<br> old_pid=" + str(old_pid)
 
 
 def validate_coords(lat,lon):
@@ -30,10 +40,8 @@ def validate_coords(lat,lon):
         abort(400, "Invalid coordinates")
 
 
-def get_lat():
-    return getattr(current_app, 'lat', None)
+def get_proc():
+    return getattr(current_app, 'proc', None)
 
-
-def set_lat(lat):
-    current_app.lat = lat
-
+def set_proc(proc):
+    current_app.proc = proc
