@@ -14,30 +14,29 @@ def myrouter():
     lon = request.args.get("lon", type=float)
     validate_coords(lat,lon)
 
-    # alten prozess ggf. terminieren (wie speichert man dessen pid?)
-    # neuen prozess starten
-    # gute anleitung: https://stackoverflow.com/a/17809718
-    # rtfm: https://docs.python.org/3/library/subprocess.html
-
-    old_proc = get_proc()
-    old_pid = None
-    if old_proc != None and old_proc.poll() == None: # poll() == None means process is still alive
-        old_pid = str(old_proc.pid)
-        old_proc.terminate() # send SIGTERM
-        try:
-            returncode = old_proc.wait(timeout=3) # wait for SIGTERM taking effect
-        except subprocess.TimeoutExpired: # if SIGTERM wasn't successful
-            old_proc.kill()
-
+    kill_process(get_proc())
     proc = subprocess.Popen(["./announcer-test.py", "myarg"])
     set_proc(proc)
 
-    return "This is router.<br>lat=" + str(lat) + "<br> lon=" + str(lon) + "<br> old_proc=" + str(old_proc) + "<br> proc=" + str(proc) + "<br> pid=" + str(proc.pid) + "<br> old_pid=" + str(old_pid)
-
+    return "This is router.<br>lat=" + str(lat) + "<br> lon=" + str(lon)
 
 def validate_coords(lat,lon):
     if lat<-90 or lat>90 or lon<-180 or lon>180:
         abort(400, "Invalid coordinates")
+
+def kill_process(p):
+    # https://stackoverflow.com/a/17809718
+    # https://docs.python.org/3/library/subprocess.html
+
+    old_pid = None
+    if p != None and p.poll() == None: # poll() == None means process is still alive
+        old_pid = str(p.pid)
+        p.terminate() # send SIGTERM
+        try:
+            returncode = p.wait(timeout=3) # wait for SIGTERM taking effect
+        except subprocess.TimeoutExpired: # if SIGTERM wasn't successful
+            p.kill() # send SIGKILL
+
 
 
 def get_proc():
