@@ -9,13 +9,17 @@ class Gps():
 
         self.__connect()
 
+    @retry(wait_fixed=1000)
     def get_pos_bearing(self):
         # Get gps position
         packet = gpsd.get_current()
+        self.__logger.debug("packet=" + str(packet))
+        self.__logger.debug("packet.position()=" + str(packet.position()))
+        self.__logger.debug("packet.track()=" + str(packet.track))
 
         # See the inline docs for GpsResponse for the available data: https://github.com/MartijnBraam/gpsd-py3/blob/master/DOCS.md
         try:
-            return packet.position() + (packet.track(),)
+            return packet.position() + (packet.track,)
         except:
             return None
 

@@ -15,22 +15,23 @@ class Main:
         self.__gps = Gps()
 
         # TODO: use @retry decorator
-        start_pos_bearing = None
-        while start_pos_bearing == None:
+        start_pos = None
+        while start_pos == None:
             self.__logger.debug("Going to read position and direction")
             try:
-                start_pos_bearing = self.__gps.get_pos_bearing()
+                start_pos = self.__gps.get_pos_bearing()
             except:
-                start_pos_bearing = None
-            self.__logger.debug("start_pos_bearing=" + str(start_pos_bearing))
+                start_pos = None
+            self.__logger.debug("start_pos=" + str(start_pos))
             time.sleep(0.5)
 
         destination_pos = (args.lat, args.lon)
 
         self.__logger.debug("Going to initialize router")
-        router = OrsRouter(start_pos, start_bearing, destination_pos)
+        router = OrsRouter(start_pos, destination_pos)
 
-        router.update_pos()
+        cur_pos = start_pos # TODO: read cur_pos freshly from Gps
+        router.update_pos(cur_pos)
 
     def init_logging(self):
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
