@@ -18,10 +18,7 @@ class Gps():
         self.__logger.debug("packet.track()=" + str(packet.track))
 
         # See the inline docs for GpsResponse for the available data: https://github.com/MartijnBraam/gpsd-py3/blob/master/DOCS.md
-        try:
-            return packet.position() + (packet.track,)
-        except:
-            return None
+        return packet.position() + (packet.track,)
 
     @retry(wait_fixed=1000)
     def __connect(self):
