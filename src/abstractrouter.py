@@ -6,14 +6,11 @@ class AbstractRouter():
         pass
 
     @abstractmethod
-    def initialize():
-        pass
-
-    @abstractmethod
-    def update_pos(cur_pos: tuple):
+    def update_pos(cur_pos_bear: tuple):
         """
-        Notify the router that we have arrived at a new position so he can evaluate if there is a new announcement to be made.
+        Notify the router of a new position so he can evaluate if there is a new announcement to be made.
 
+        :param cur_pos_bear: a tuple (latitude, longitude, bearing)
         :returns: has destination beed arrived
         """
         pass
