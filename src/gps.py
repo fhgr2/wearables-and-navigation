@@ -1,6 +1,6 @@
 import gpsd # pip3 install gpsd-py3
 import logging
-from tenacity import retry, wait_fixed # pip3 install tenacity
+from tenacity import retry, wait_fixed, retry_if_result # pip3 install tenacity
 
 class Gps():
     def __init__(self):
@@ -9,20 +9,17 @@ class Gps():
 
         self.__connect()
 
-    @retry(wait=wait_fixed(0.5))
+    @retry(wait=wait_fixed(0.5), retry=retry_if_result(lambda result: result.mode<3))
     def fetch(self):
         """
         Read new 3D position from gpsd and cache it
         """
         self.__packet = gpsd.get_current()
-        while self.__packet.mode < 3: # ensure we have a 3D fix
-            self.__packet = gpsd.get_current()
+        return self.__packet # only used for the retry decorator, don't use this value
             
-        
     def fetch_get_pos_bearing(self):
         self.fetch()
         return self.get_pos_bearing()
-
 
     def get_pos_bearing(self):
         """
@@ -35,7 +32,6 @@ class Gps():
 
         # See the inline docs for GpsResponse for the available data: https://github.com/MartijnBraam/gpsd-py3/blob/master/DOCS.md
         return self.__packet.position() + (self.__packet.track,)
-        
 
     @retry(wait=wait_fixed(0.5))
     def __connect(self):
