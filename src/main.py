@@ -15,7 +15,7 @@ class Main:
         self.__gps = Gps()
 
         self.__logger.debug("Going to read position and direction")
-        start_pos_bear = self.__gps.get_pos_bearing()
+        start_pos_bear = self.__gps.fetch_get_pos_bearing()
         self.__logger.debug("start_pos_bear=" + str(start_pos_bear))
 
         destination_pos = (args.lat, args.lon)
@@ -23,7 +23,7 @@ class Main:
         self.__logger.debug("Going to initialize router")
         router = OrsRouter(start_pos_bear, destination_pos)
 
-        while router.update_pos(self.__gps.get_pos_bearing()) == False: time.sleep(1)
+        while router.update_pos(self.__gps.fetch_get_pos_bearing()) == False: time.sleep(1)
 
         self.__logger.info("Arrival at destination")
 

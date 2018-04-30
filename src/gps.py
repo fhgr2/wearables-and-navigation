@@ -10,15 +10,26 @@ class Gps():
         self.__connect()
 
     @retry(wait_fixed=1000)
-    def get_pos_bearing(self):
+    def fetch(self):
+        """
+        Read new position from gpsd
+        """
+        self.__packet = gpsd.get_current()
+        
+    def fetch_get_pos_bearing(self):
         # Get gps position
-        packet = gpsd.get_current()
-        self.__logger.debug("packet=" + str(packet))
-        self.__logger.debug("packet.position()=" + str(packet.position()))
-        self.__logger.debug("packet.track()=" + str(packet.track))
+        self.fetch()
+        return self.get_pos_bearing()
+
+
+    def get_pos_bearing(self):
+        self.__logger.debug("self.__packet=" + str(self.__packet))
+        self.__logger.debug("self.__packet.position()=" + str(self.__packet.position()))
+        self.__logger.debug("self.__packet.track=" + str(self.__packet.track))
 
         # See the inline docs for GpsResponse for the available data: https://github.com/MartijnBraam/gpsd-py3/blob/master/DOCS.md
-        return packet.position() + (packet.track,)
+        return self.__packet.position() + (self.__packet.track,)
+        
 
     @retry(wait_fixed=1000)
     def __connect(self):
