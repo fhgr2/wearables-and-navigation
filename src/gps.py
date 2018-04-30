@@ -12,9 +12,12 @@ class Gps():
     @retry(wait_fixed=500)
     def fetch(self):
         """
-        Read new position from gpsd and cache it
+        Read new 3D position from gpsd and cache it
         """
         self.__packet = gpsd.get_current()
+        while self.__packet.mode < 3: # ensure we have a 3D fix
+            self.__packet = gpsd.get_current()
+            
         
     def fetch_get_pos_bearing(self):
         self.fetch()
