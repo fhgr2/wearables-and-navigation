@@ -1,6 +1,6 @@
 import gpsd # pip3 install gpsd-py3
 import logging
-from retrying import retry # pip3 install retrying
+from tenacity import retry, wait_fixed # pip3 install tenacity
 
 class Gps():
     def __init__(self):
@@ -9,7 +9,7 @@ class Gps():
 
         self.__connect()
 
-    @retry(wait_fixed=500)
+    @retry(wait=wait_fixed(0.5))
     def fetch(self):
         """
         Read new 3D position from gpsd and cache it
@@ -37,7 +37,7 @@ class Gps():
         return self.__packet.position() + (self.__packet.track,)
         
 
-    @retry(wait_fixed=500)
+    @retry(wait=wait_fixed(0.5))
     def __connect(self):
         # TODO: logging
         self.__logger.debug("Going to connect to gpsd")
