@@ -9,20 +9,23 @@ class Gps():
 
         self.__connect()
 
-    @retry(wait_fixed=1000)
+    @retry(wait_fixed=500)
     def fetch(self):
         """
-        Read new position from gpsd
+        Read new position from gpsd and cache it
         """
         self.__packet = gpsd.get_current()
         
     def fetch_get_pos_bearing(self):
-        # Get gps position
         self.fetch()
         return self.get_pos_bearing()
 
 
     def get_pos_bearing(self):
+        """
+        Return cached position and bearing
+        """
+
         self.__logger.debug("self.__packet=" + str(self.__packet))
         self.__logger.debug("self.__packet.position()=" + str(self.__packet.position()))
         self.__logger.debug("self.__packet.track=" + str(self.__packet.track))
@@ -31,7 +34,7 @@ class Gps():
         return self.__packet.position() + (self.__packet.track,)
         
 
-    @retry(wait_fixed=1000)
+    @retry(wait_fixed=500)
     def __connect(self):
         # TODO: logging
         self.__logger.debug("Going to connect to gpsd")
