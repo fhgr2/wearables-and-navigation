@@ -9,7 +9,7 @@ class Gps():
 
         self.__connect()
 
-    @retry(wait=wait_fixed(0.5), retry=retry_if_result(lambda result: result.mode<3))
+    @retry(wait=wait_fixed(0.5), retry=retry_if_result(lambda result: result.mode<3 or result.lon<5 or result.lon>11 or result.lat<45 or result.lat>48))
     def fetch(self):
         """
         Read new 3D position from gpsd and cache it
