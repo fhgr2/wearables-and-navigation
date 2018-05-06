@@ -1,6 +1,6 @@
 import gpsd # pip3 install gpsd-py3
 import logging
-from tenacity import retry, wait_fixed, retry_if_result # pip3 install tenacity
+from tenacity import retry, wait_fixed, retry_if_result, retry_if_exception_type # pip3 install tenacity
 
 class Gps():
     def __init__(self):
@@ -9,7 +9,7 @@ class Gps():
 
         self.__connect()
 
-    @retry(wait=wait_fixed(0.5), retry=retry_if_result(lambda result: result.mode<3 or result.lon<5 or result.lon>11 or result.lat<45 or result.lat>48))
+    @retry(wait=wait_fixed(0.5), retry=(retry_if_result(lambda packet: packet.mode<3 or packet.lon<5 or packet.lon>11 or packet.lat<45 or packet.lat>48) | retry_if_exception_type()))
     def fetch(self):
         """
         Read new 3D position from gpsd and cache it
