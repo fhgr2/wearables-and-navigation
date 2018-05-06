@@ -9,7 +9,7 @@ class OrsRouter(AbstractRouter):
         self.__logger = logging.getLogger(__name__)
         self.__logger.info("OrsRouter.__init__() called")
         self.__cur_pos_bear = start_pos_bear
-        self.__client = openrouteservice.Client(key='***REMOVED***')
+        self.__client = openrouteservice.Client(key='***REMOVED***', retry_timeout=3600)
         self.__fetch_route(start_pos_bear, destination_pos)
 
     def update_pos(self, cur_pos_bear: tuple):
