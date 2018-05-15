@@ -6,36 +6,39 @@ import pprint # only for debugging
 import pyproj
 from shapely.ops import transform
 from shapely.geometry import Point, LineString
+import config
+#from orsrouter import Pois
+from geometryhelper import GeometryHelper
 
 class OrsRouter(AbstractRouter):
 
-    def __init__(self, start_pos_bear: tuple, destination_pos: tuple):
+    def __init__(self, start: Point, start_bear: float, destination: Point):
         # logging
         self.__logger = logging.getLogger(__name__)
         self.__logger.info("OrsRouter.__init__() called")
 
-        # tweakable parameters
-        self.__poi_reached_threshold = 20 # consider a poi reached, when distance is smaller than this value in meters
-        self.__destination_reached_threshold = 20 # consider destination reached, when distance is smaller than this value in meters
-        self.__wrong_way_threshold = 32 # consider being on a wrong way when the distance is larger than this value in meters
-        # TODO: maybe use better logic which includes the current speed
-
         # value initialization
-        self.__cur_pos_bear = start_pos_bear
+        self.__cur = start
+        self.__cur_bear = start_bear
+        self.__destination = destination
         self.__client = openrouteservice.Client(key='***REMOVED***', retry_timeout=3600)
-        self.__fetch_ls84_pois(start_pos_bear, destination_pos)
+        self.__fetch_ls84_pois(start, start_bear, destination) # TODO: use cur values?
 
-    def update_pos(self, cur_pos_bear: tuple):
-        self.__logger.info("OrsRouter.update_pos() called with cur_pos_bear=" + str(cur_pos_bear))
-        self.__cur_pos_bear = cur_pos_bear
+    def update_pos_wrapped(self, pos_bear):
+        return self.update_pos(pos_bear[0], pos_bear[1])
+
+    def update_pos(self, cur: Point, cur_bear: float):
+        self.__logger.info("OrsRouter.update_pos() called with cur=" + str(cur) + " cur_bear=" + str(cur_bear))
+        self.__cur = cur
+        self.__cur_bear = cur_bear
         return self.__is_destination_reached()
 
     def __is_destination_reached(self):
-        distance = self.__get_distance(self.__linestring84, self.__cur_pos_bear)
-        self.__logger.info("OrsRouter.__is_destination_reached() called with distance=" + str(distance) + " and __destination_reached_threshold=" + str(self.__destination_reached_threshold))
-        return distance < self.__destination_reached_threshold
+        distance = GeometryHelper.get_distance(self.__cur, self.__destination)
+        self.__logger.info("OrsRouter.__is_destination_reached() called with distance=" + str(distance) + " and __destination_reached_threshold=" + str(config.routing['destination_reached_threshold']))
+        return distance < config.routing['destination_reached_threshold']
 
-    def __fetch_ls84_pois(self, start_pos_bear: tuple, destination_pos: tuple):
+    def __fetch_ls84_pois(self, start: Point, start_bear: float, destination: Point):
         """
         Fetch
             1. a linestring containing all points of the route and
@@ -43,25 +46,22 @@ class OrsRouter(AbstractRouter):
         """
         self.__logger.info("OrsRouter.__fetch_ls84_pois() called")
 
-        route = self.__fetch_route(start_pos_bear, destination_pos)
+        route = self.__fetch_route(start, start_bear, destination)
 
         coordinates = convert.decode_polyline(route['geometry'])['coordinates']
         #print("coordinates=" + str(coordinates))
 
         self.__linestring84 = self.__coords2ls84(coordinates) # all coordinates
 
-        self.__pois = self.__generate_pois(route, coordinates) # points where a change of direction happen
+        self.__pois = Pois(route, coordinates) # points where a change of direction happens
 
 
-    def __fetch_route(self, start_pos_bear: tuple, destination_pos: tuple):
-        self.__logger.info("OrsRouter.__fetch_route() called")
-        start_lat = start_pos_bear[0]
-        start_lon = start_pos_bear[1]
-        dest_lat  = destination_pos[0]
-        dest_lon  = destination_pos[1]
-        in_coords = ((start_lon,start_lat), (dest_lon,dest_lat))
+    def __fetch_route(self, start: Point, start_bear: float, destination: Point):
+        self.__logger.info("OrsRouter.__fetch_route() called, start=" + str(start) + "start_bear=" + str(start_bear) + "destination=" + str(destination)) # TODO: log values
+        in_coords = ((start.x,start.y), (destination.x,destination.y))
 
         routes = directions(self.__client, in_coords, profile="cycling-safe", instructions="true", bearings=[[40,45]], continue_straight="true", optimized="false") # TODO: add further parameters, see https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
+        # TODO: fix bearings=...
 
         #print("routes=" + str(routes))
         #print("route=" + str(routes['routes'][0]))
@@ -87,32 +87,39 @@ class OrsRouter(AbstractRouter):
         return LineString(points)
         
 
-    def __generate_pois(self, route, coordinates):
+
+class Pois():
+    """
+    Store location and type of POIs (point of interest) in an ordered fashion
+    """
+
+    def __init__(self, route, coordinates):
+        self.__logger = logging.getLogger(__name__)
+        self.__logger.setLevel("DEBUG")
+        self.__logger.info("Pois.__init__() called")
+
+        self.__pois = []
+
         #print("steps=" + str(routes['routes'][0]['segments'][0]['steps']))
         #print("coordinates=" + str(coordinates))
-
-        pois = []
 
         for step in route['segments'][0]['steps']:
             way_point = step['way_points'][0]
             #print("way_point=" + str(way_point))
-            pois.append({'lat': coordinates[way_point][1], 'lon': coordinates[way_point][0], 'thetype': step['type']}) # TODO: fix lat,lon
+            self.__pois.append({'position': Point(coordinates[way_point][0], coordinates[way_point][1]), 'thetype': step['type']})
 
         #print("pois=" + str(pois))
-        return pois
+        #return pois
 
 
-    def __get_distance(self, linestring84, pos_bear):
+    def check_position(self, cur):
         """
-        Return distance in meters between linestring and a position/bearing tuplet
-        """
-        lat = pos_bear[0]
-        lon = pos_bear[1]
-        linestring95 = self.__wgs84ToLv95(linestring84)
-        point95 = self.__wgs84ToLv95(Point(lon, lat))
-        return linestring95.distance(point95)
+        Test if there is a POI near the given position.
+        
+        If yes, return its type and disable all previous POIs.
 
-    # according to https://gis.stackexchange.com/a/127432
-    def __wgs84ToLv95(self, old):
-        project = lambda x, y: pyproj.transform(pyproj.Proj(init='epsg:4326'), pyproj.Proj(init='epsg:2056'), x, y)
-        return transform(project,old)
+        If no, return None and keep all POIs.
+        """
+
+
+

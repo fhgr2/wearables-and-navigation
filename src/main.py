@@ -6,6 +6,7 @@ import time
 from abstractrouter import AbstractRouter
 from orsrouter import OrsRouter
 from gps import Gps
+from shapely.geometry import Point, LineString
 
 class Main:
     def __init__(self, args):
@@ -15,18 +16,19 @@ class Main:
         self.__gps = Gps()
 
         self.__logger.debug("Going to read position and direction")
-        start_pos_bear = self.__gps.fetch_get_pos_bearing()
-        self.__logger.debug("start_pos_bear=" + str(start_pos_bear))
+        start, start_bear = self.__gps.fetch_get_pos_bearing()
+        self.__logger.debug("start=" + str(start))
+        self.__logger.debug("start_bear=" + str(start_bear))
 
-        destination_pos = (args.lat, args.lon)
+        destination = Point(args.lon, args.lat)
 
         self.__logger.debug("Going to initialize router")
-        router = OrsRouter(start_pos_bear, destination_pos)
+        router = OrsRouter(start, start_bear, destination)
 
-        while router.update_pos(self.__gps.fetch_get_pos_bearing()) == False: time.sleep(1)
+        while router.update_pos_wrapped(self.__gps.fetch_get_pos_bearing()) == False: time.sleep(1)
 
         self.__logger.info("Arrival at destination")
-        # TODO: need to announce this?
+        # TODO: need to announce arrival at destination?
 
     def init_logging(self):
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

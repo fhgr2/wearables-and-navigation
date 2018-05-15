@@ -1,6 +1,7 @@
 import gpsd # pip3 install gpsd-py3
 import logging
 from tenacity import retry, wait_fixed, retry_if_result, retry_if_exception_type # pip3 install tenacity
+from shapely.geometry import Point, LineString
 
 class Gps():
     def __init__(self):
@@ -26,12 +27,14 @@ class Gps():
         Return cached position and bearing
         """
 
-        self.__logger.debug("self.__packet=" + str(self.__packet))
-        self.__logger.debug("self.__packet.position()=" + str(self.__packet.position()))
-        self.__logger.debug("self.__packet.track=" + str(self.__packet.track))
+        packet = self.__packet
+
+        self.__logger.debug("self.__packet=" + str(packet))
+        self.__logger.debug("self.__packet.position()=" + str(packet.position()))
+        self.__logger.debug("self.__packet.track=" + str(packet.track))
 
         # See the inline docs for GpsResponse for the available data: https://github.com/MartijnBraam/gpsd-py3/blob/master/DOCS.md
-        return self.__packet.position() + (self.__packet.track,)
+        return (Point(packet.lon,packet.lat), self.__packet.track)
 
     @retry(wait=wait_fixed(0.5))
     def __connect(self):
