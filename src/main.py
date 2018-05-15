@@ -26,6 +26,7 @@ class Main:
         while router.update_pos(self.__gps.fetch_get_pos_bearing()) == False: time.sleep(1)
 
         self.__logger.info("Arrival at destination")
+        # TODO: need to announce this?
 
     def init_logging(self):
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

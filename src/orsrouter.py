@@ -10,20 +10,30 @@ from shapely.geometry import Point, LineString
 class OrsRouter(AbstractRouter):
 
     def __init__(self, start_pos_bear: tuple, destination_pos: tuple):
+        # logging
         self.__logger = logging.getLogger(__name__)
         self.__logger.info("OrsRouter.__init__() called")
+
+        # tweakable parameters
+        self.__poi_reached_threshold = 20 # consider a poi reached, when distance is smaller than this value in meters
+        self.__destination_reached_threshold = 20 # consider destination reached, when distance is smaller than this value in meters
+        self.__wrong_way_threshold = 32 # consider being on a wrong way when the distance is larger than this value in meters
+        # TODO: maybe use better logic which includes the current speed
+
+        # value initialization
         self.__cur_pos_bear = start_pos_bear
         self.__client = openrouteservice.Client(key='***REMOVED***', retry_timeout=3600)
         self.__fetch_ls84_pois(start_pos_bear, destination_pos)
 
-
     def update_pos(self, cur_pos_bear: tuple):
         self.__logger.info("OrsRouter.update_pos() called with cur_pos_bear=" + str(cur_pos_bear))
         self.__cur_pos_bear = cur_pos_bear
-        print("cur_pos_bear=" + str(cur_pos_bear))
+        return self.__is_destination_reached()
+
+    def __is_destination_reached(self):
         distance = self.__get_distance(self.__linestring84, self.__cur_pos_bear)
-        print("distance=" + str(distance))
-        return False
+        self.__logger.info("OrsRouter.__is_destination_reached() called with distance=" + str(distance) + " and __destination_reached_threshold=" + str(self.__destination_reached_threshold))
+        return distance < self.__destination_reached_threshold
 
     def __fetch_ls84_pois(self, start_pos_bear: tuple, destination_pos: tuple):
         """
@@ -55,6 +65,9 @@ class OrsRouter(AbstractRouter):
 
         #print("routes=" + str(routes))
         #print("route=" + str(routes['routes'][0]))
+
+        # TODO: overwrite destination coordinates with the ones received from ORS, since there may be no way leading exactly to the desired destination coordinates
+        # TODO: maybe it's better to implement "arrival at the destination" using the same technique as the other pois
 
         return routes['routes'][0]
 
