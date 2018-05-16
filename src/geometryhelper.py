@@ -7,7 +7,7 @@ class GeometryHelper:
     @staticmethod
     def get_distance(obj_one, obj_two):
         """
-        Return distance in meters between linestring and a position/bearing tuplet
+        Return distance in meters between two shapely geometry objects
         """
         obj_one_95 = GeometryHelper.__wgs84ToLv95(obj_one)
         obj_two_95 = GeometryHelper.__wgs84ToLv95(obj_two)
