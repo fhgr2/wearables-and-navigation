@@ -7,6 +7,7 @@ from abstractrouter import AbstractRouter
 from orsrouter import OrsRouter
 from gps import Gps
 from shapely.geometry import Point, LineString
+from announcermanager import AnnouncerManager
 
 class Main:
     def __init__(self, args):
@@ -22,8 +23,10 @@ class Main:
 
         destination = Point(args.lon, args.lat)
 
+        announcer_manager = AnnouncerManager()
+
         self.__logger.debug("Going to initialize router")
-        router = OrsRouter(start, start_bear, destination)
+        router = OrsRouter(start, start_bear, destination, announcer_manager)
 
         while self.__update_pos_wrapped(self.__gps.fetch_get_pos_bearing(), router) == False: time.sleep(1)
 

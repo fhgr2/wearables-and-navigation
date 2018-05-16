@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from shapely.geometry import Point, LineString
+from announcermanager import AnnouncerManager
 
 class AbstractRouter(ABC):
 
-    def __init__(self, start: Point, start_bear: float, destination: Point):
+    def __init__(self, start: Point, start_bear: float, destination: Point, announcer_manager: AnnouncerManager):
         pass
 
     @abstractmethod
