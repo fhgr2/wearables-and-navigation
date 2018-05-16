@@ -35,7 +35,7 @@ class OrsRouter(AbstractRouter):
         coordinates = convert.decode_polyline(self.__route['geometry'])['coordinates']
         #print("coordinates=" + str(coordinates))
 
-        self.__track = self.__coords2ls84(coordinates) # all coordinates
+        self.__track = self.__coords2linestring(coordinates) # all coordinates
 
         self.__pois = Pois(self.__route, coordinates) # points where a change of direction happens
 
@@ -92,7 +92,7 @@ class OrsRouter(AbstractRouter):
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(self.__route)
 
-    def __coords2ls84(self, coords): # lon, lat
+    def __coords2linestring(self, coords): # lon, lat
         points = []
         for coord in coords:
             #print("coord=" + str(coord))
