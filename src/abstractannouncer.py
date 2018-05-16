@@ -2,10 +2,6 @@ from abc import ABC, abstractmethod
 
 class AbstractAnnouncer(ABC):
 
-    # for instruction types see https://github.com/GIScience/openrouteservice/blob/master/openrouteservice/src/main/java/heigit/ors/routing/instructions/InstructionType.java
-    def announce(self, thetype: int):
-        self.__options.get(thetype, self.unknown)()
-
     @abstractmethod
     def left():
         pass
@@ -60,6 +56,7 @@ class AbstractAnnouncer(ABC):
 
     def __init__(self):
         # https://stackoverflow.com/a/11479840
+        # for instruction types see https://github.com/GIScience/openrouteservice/blob/master/openrouteservice/src/main/java/heigit/ors/routing/instructions/InstructionType.java
         self.__options = {
             0: self.left,
             1: self.right,
@@ -74,4 +71,9 @@ class AbstractAnnouncer(ABC):
             10: self.arrival,
             11: self.departure,
             12: self.unknown
+            # default value for non-existing keys is defined outside
         }
+
+    def announce(self, thetype: int):
+        self.__options.get(thetype, self.unknown)() # call self.unknown() if non-existing key was provided
+
