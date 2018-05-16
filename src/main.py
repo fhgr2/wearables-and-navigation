@@ -25,10 +25,13 @@ class Main:
         self.__logger.debug("Going to initialize router")
         router = OrsRouter(start, start_bear, destination)
 
-        while router.update_pos_wrapped(self.__gps.fetch_get_pos_bearing()) == False: time.sleep(1)
+        while self.__update_pos_wrapped(self.__gps.fetch_get_pos_bearing(), router) == False: time.sleep(1)
 
         self.__logger.info("Arrival at destination")
         # TODO: need to announce arrival at destination?
+
+    def __update_pos_wrapped(self, pos_bear, router):
+        return router.update_pos(pos_bear[0], pos_bear[1])
 
     def init_logging(self):
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

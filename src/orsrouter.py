@@ -24,9 +24,6 @@ class OrsRouter(AbstractRouter):
         self.__client = openrouteservice.Client(key='***REMOVED***', retry_timeout=3600)
         self.__fetch_ls84_pois(start, start_bear, destination) # TODO: use cur values?
 
-    def update_pos_wrapped(self, pos_bear):
-        return self.update_pos(pos_bear[0], pos_bear[1])
-
     def update_pos(self, cur: Point, cur_bear: float):
         self.__logger.info("OrsRouter.update_pos() called with cur=" + str(cur) + " cur_bear=" + str(cur_bear))
         self.__cur = cur
