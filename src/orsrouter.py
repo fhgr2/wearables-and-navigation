@@ -51,7 +51,8 @@ class OrsRouter(AbstractRouter):
             self.__calculate_routing_information()
 
         # TODO: checkin position and announce if necessary
-
+        if self.__pois.checkin_position(self.__cur) != None:
+            pass
         
         return self.__is_destination_reached()
 
