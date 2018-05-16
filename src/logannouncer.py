@@ -8,42 +8,42 @@ class LogAnnouncer(AbstractAnnouncer):
         self.__logger.info("LogAnnouncer.__init__() called")
         super(LogAnnouncer, self).__init__()
 
-    def left(self):
+    def left(self, exit_number):
         self.__logger.info("LogAnnouncer.left() called")
 
-    def right(self):
+    def right(self, exit_number):
         self.__logger.info("LogAnnouncer.right() called")
 
-    def sharp_left(self):
+    def sharp_left(self, exit_number):
         self.__logger.info("LogAnnouncer.sharp_left() called")
 
-    def sharp_right(self):
+    def sharp_right(self, exit_number):
         self.__logger.info("LogAnnouncer.sharp_right() called")
 
-    def slight_left(self):
+    def slight_left(self, exit_number):
         self.__logger.info("LogAnnouncer.slight_left() called")
 
-    def slight_right(self):
+    def slight_right(self, exit_number):
         self.__logger.info("LogAnnouncer.slight_right() called")
 
-    def continue_way(self):
+    def continue_way(self, exit_number):
         self.__logger.info("LogAnnouncer.continue_way() called")
 
-    def enter_roundabout(self):
+    def enter_roundabout(self, exit_number):
         self.__logger.info("LogAnnouncer.enter_roundabout() called")
 
-    def exit_roundabout(self):
+    def exit_roundabout(self, exit_number):
         self.__logger.info("LogAnnouncer.exit_roundabout() called")
 
-    def uturn(self):
+    def uturn(self, exit_number):
         self.__logger.info("LogAnnouncer.uturn() called")
 
-    def arrival(self):
+    def arrival(self, exit_number):
         self.__logger.info("LogAnnouncer.arrival() called")
 
-    def departure(self):
+    def departure(self, exit_number):
         self.__logger.info("LogAnnouncer.departure() called")
 
-    def unknown(self):
-        self.__logger.info("LogAnnouncer.unknown() called")
+    def unknown(self, exit_number):
+        self.__logger.info("LogAnnouncer.unknown() called, exit_number=" + str(exit_number))
 

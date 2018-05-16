@@ -45,7 +45,7 @@ class OrsRouter(AbstractRouter):
         self.__cur = cur
         self.__cur_bear = cur_bear
 
-        self.__announcer_manager.announce(111)
+        self.__announcer_manager.announce(11, 1)
 
         #are we still on track or is a route-recalculation necessary?
         if not self.__is_position_on_track():
