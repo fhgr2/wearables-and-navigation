@@ -9,6 +9,7 @@ from shapely.geometry import Point, LineString
 import config
 #from orsrouter import Pois
 from geometryhelper import GeometryHelper
+from logannouncer import LogAnnouncer
 
 class OrsRouter(AbstractRouter):
 
@@ -42,6 +43,9 @@ class OrsRouter(AbstractRouter):
         self.__logger.info("OrsRouter.update_pos() called with cur=" + str(cur) + " cur_bear=" + str(cur_bear))
         self.__cur = cur
         self.__cur_bear = cur_bear
+
+        log_announcer = LogAnnouncer()
+        log_announcer.announce(1)
 
         #are we still on track or is a route-recalculation necessary?
         if not self.__is_position_on_track():
