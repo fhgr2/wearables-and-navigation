@@ -18,16 +18,41 @@ class OrsRouter(AbstractRouter):
         self.__logger.info("OrsRouter.__init__() called with start=" + str(start) + " start_bear=" + str(start_bear) + " destination=" + str(destination))
 
         # value initialization
-        self.__cur = start
-        self.__cur_bear = start_bear
+        self.__start = start
+        self.__start_bear = start_bear
         self.__destination = destination
         self.__client = openrouteservice.Client(key='***REMOVED***', retry_timeout=3600)
-        self.__fetch_ls84_pois(start, start_bear, destination) # TODO: use cur values?
+
+        self.__calculate_routing_information()
+
+    def __calculate_routing_information(self):
+        self.__logger.info("OrsRouter.__calculate_routing_information() called")
+
+        self.__fetch_route()
+
+        coordinates = convert.decode_polyline(self.__route['geometry'])['coordinates']
+        #print("coordinates=" + str(coordinates))
+
+        self.__track = self.__coords2ls84(coordinates) # all coordinates
+
+        self.__pois = Pois(self.__route, coordinates) # points where a change of direction happens
+
 
     def update_pos(self, cur: Point, cur_bear: float):
         self.__logger.info("OrsRouter.update_pos() called with cur=" + str(cur) + " cur_bear=" + str(cur_bear))
         self.__cur = cur
         self.__cur_bear = cur_bear
+
+        #are we still on track or is a route-recalculation necessary?
+        if not self.__is_position_on_track():
+            self.__logger.warn("OrsRouter.update_pos(): position is not on track anymore, going to recalculate route")
+            self.__start = cur
+            self.__start_bear = cur_bear
+            self.__calculate_routing_information()
+
+        # TODO: checkin position and announce if necessary
+
+        
         return self.__is_destination_reached()
 
     def __is_destination_reached(self):
@@ -35,27 +60,13 @@ class OrsRouter(AbstractRouter):
         self.__logger.info("OrsRouter.__is_destination_reached() called with distance=" + str(distance) + " and __destination_reached_threshold=" + str(config.routing['destination_reached_threshold']))
         return distance < config.routing['destination_reached_threshold']
 
-    def __fetch_ls84_pois(self, start: Point, start_bear: float, destination: Point):
-        """
-        Fetch
-            1. a linestring containing all points of the route and
-            2. an array of points where a change of direction happens
-        """
-        self.__logger.info("OrsRouter.__fetch_ls84_pois() called")
-
-        route = self.__fetch_route(start, start_bear, destination)
-
-        coordinates = convert.decode_polyline(route['geometry'])['coordinates']
-        #print("coordinates=" + str(coordinates))
-
-        self.__linestring84 = self.__coords2ls84(coordinates) # all coordinates
-
-        self.__pois = Pois(route, coordinates) # points where a change of direction happens
+    def __is_position_on_track(self):
+        return GeometryHelper.get_distance(self.__cur, self.__track) < config.routing['wrong_way_threshold']
 
 
-    def __fetch_route(self, start: Point, start_bear: float, destination: Point):
-        self.__logger.info("OrsRouter.__fetch_route() called, start=" + str(start) + "start_bear=" + str(start_bear) + "destination=" + str(destination)) # TODO: log values
-        in_coords = ((start.x,start.y), (destination.x,destination.y))
+    def __fetch_route(self):
+        self.__logger.info("OrsRouter.__fetch_route() called, start=" + str(self.__start) + "start_bear=" + str(self.__start_bear) + "destination=" + str(self.__destination))
+        in_coords = ((self.__start.x,self.__start.y), (self.__destination.x,self.__destination.y))
 
         routes = directions(self.__client, in_coords, profile="cycling-safe", instructions="true", bearings=[[40,45]], continue_straight="true", optimized="false") # TODO: add further parameters, see https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
         # TODO: fix bearings=...
@@ -66,7 +77,7 @@ class OrsRouter(AbstractRouter):
         # TODO: overwrite destination coordinates with the ones received from ORS, since there may be no way leading exactly to the desired destination coordinates
         # TODO: maybe it's better to implement "arrival at the destination" using the same technique as the other pois
 
-        return routes['routes'][0]
+        self.__route = routes['routes'][0]
 
         #print("geometry=" + str(convert.decode_polyline(routes['routes'][0]['geometry'])))
         #print("type(geometry)=" + str(type(convert.decode_polyline(routes['routes'][0]['geometry'])))) # type = dict
@@ -109,7 +120,7 @@ class Pois():
         #return pois
 
 
-    def check_position(self, cur):
+    def checkin_position(self, cur):
         """
         Test if there is a POI near the given position.
         
