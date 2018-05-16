@@ -45,7 +45,7 @@ class OrsRouter(AbstractRouter):
         self.__cur_bear = cur_bear
 
         log_announcer = LogAnnouncer()
-        log_announcer.announce(1)
+        log_announcer.announce(111)
 
         #are we still on track or is a route-recalculation necessary?
         if not self.__is_position_on_track():
@@ -89,13 +89,13 @@ class OrsRouter(AbstractRouter):
         #print("coordinates=" + str(convert.decode_polyline(routes['routes'][0]['geometry'])['coordinates']))
         #print("geometry[0]=" + str(convert.decode_polyline(routes['routes'][0]['geometry'][0])))
 
-        #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(routes)
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(self.__route)
 
     def __coords2ls84(self, coords): # lon, lat
         points = []
         for coord in coords:
-            print("coord=" + str(coord))
+            #print("coord=" + str(coord))
             points.append(Point(coord[0], coord[1])) # lon, lat
         return LineString(points)
         
