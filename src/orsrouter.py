@@ -15,7 +15,7 @@ class OrsRouter(AbstractRouter):
     def __init__(self, start: Point, start_bear: float, destination: Point):
         # logging
         self.__logger = logging.getLogger(__name__)
-        self.__logger.info("OrsRouter.__init__() called")
+        self.__logger.info("OrsRouter.__init__() called with start=" + str(start) + " start_bear=" + str(start_bear) + " destination=" + str(destination))
 
         # value initialization
         self.__cur = start
