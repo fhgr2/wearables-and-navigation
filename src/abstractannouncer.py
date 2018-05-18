@@ -74,6 +74,7 @@ class AbstractAnnouncer(ABC):
             # default value for non-existing keys is defined outside
         }
 
-    def announce(self, thetype: int, exit_number: int):
-        self.__options.get(thetype, self.unknown)(exit_number) # call self.unknown() if non-existing key was provided
+    def announce(self, announcement_information: dict):
+        if announcement_information != None:
+            self.__options.get(announcement_information.get("type"), self.unknown)(announcement_information.get("exit_number")) # call self.unknown() if non-existing key was provided
 

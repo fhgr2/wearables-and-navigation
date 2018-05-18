@@ -45,8 +45,6 @@ class OrsRouter(AbstractRouter):
         self.__cur = cur
         self.__cur_bear = cur_bear
 
-        self.__announcer_manager.announce(11, 1)
-
         #are we still on track or is a route-recalculation necessary?
         if not self.__is_position_on_track():
             self.__logger.warn("OrsRouter.update_pos(): position is not on track anymore, going to recalculate route")
@@ -54,9 +52,8 @@ class OrsRouter(AbstractRouter):
             self.__start_bear = cur_bear
             self.__calculate_routing_information()
 
-        # TODO: checkin position and announce if necessary
-        if self.__pois.checkin_position(self.__cur) != None:
-            pass
+        # make announcement if necessary
+        self.__announcer_manager.announce(self.__pois.checkin_position(self.__cur))
         
         return self.__is_destination_reached()
 
@@ -129,7 +126,7 @@ class Pois():
         """
         Test if there is a POI near the given position.
         
-        If yes, return a tuplet with (type,exit_number) and disable all previous POIs.
+        If yes, return a dictionary with keys "type" and "exit_number" (which may be None) and internally delete all previous POIs including the current one
 
         If no, return None and keep all POIs.
         """
@@ -151,6 +148,6 @@ class Pois():
             # remove previous pois including(!) current
             self.__pois = self.__pois[i+1:]
 
-            return (current_poi.get("type"), current_poi.get("exit_number"))
+            return {"type": current_poi.get("type"), "exit_number": current_poi.get("exit_number")}
         else:
             return None

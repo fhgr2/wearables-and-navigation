@@ -12,6 +12,6 @@ class AnnouncerManager():
         self.__announcers.append(LogAnnouncer())
         # TODO: add more announcers here
 
-    def announce(self, thetype: int, exit_number: int):
+    def announce(self, announcement_information: dict):
         for announcer in self.__announcers:
-            announcer.announce(thetype, exit_number)
+            announcer.announce(announcement_information)
