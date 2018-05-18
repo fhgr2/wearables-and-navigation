@@ -1,5 +1,6 @@
 import logging
 from logannouncer import LogAnnouncer
+from audioannouncer import AudioAnnouncer
 
 class AnnouncerManager():
 
@@ -10,6 +11,7 @@ class AnnouncerManager():
 
         self.__announcers = []
         self.__announcers.append(LogAnnouncer())
+        self.__announcers.append(AudioAnnouncer())
         # TODO: add more announcers here
 
     def announce(self, announcement_information: dict):
