@@ -119,7 +119,7 @@ class Pois():
         for step in route['segments'][0]['steps']:
             way_point = step['way_points'][0]
             #print("way_point=" + str(way_point))
-            self.__pois.append({'position': Point(coordinates[way_point][0], coordinates[way_point][1]), 'thetype': step['type']})
+            self.__pois.append({'position': Point(coordinates[way_point][0], coordinates[way_point][1]), 'type': step['type'], 'exit_number': step.get('exit_number')}) # get() will return None if key is not available
 
         #print("pois=" + str(pois))
         #return pois
@@ -129,10 +129,28 @@ class Pois():
         """
         Test if there is a POI near the given position.
         
-        If yes, return its type and disable all previous POIs.
+        If yes, return a tuplet with (type,exit_number) and disable all previous POIs.
 
         If no, return None and keep all POIs.
         """
+        # TODO: in case of no: return None or (None,None) ?
 
+        is_position_near_poi = False
+        matching_index = -1
 
+        # find first poi that is near current position
+        for i, poi in enumerate(self.__pois):
+            if GeometryHelper.get_distance(poi['position'], cur) < config.routing['poi_reached_threshold']:
+                is_position_near_poi = True
+                matching_index = i
+                break
 
+        if is_position_near_poi:
+            current_poi = self.__pois[i]
+
+            # remove previous pois including(!) current
+            self.__pois = self.__pois[i+1:]
+
+            return (current_poi.get("type"), current_poi.get("exit_number"))
+        else:
+            return None
