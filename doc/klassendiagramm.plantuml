@@ -1,0 +1,107 @@
+@startuml
+
+abstract class AbstractAnnouncer {
+{abstract} +left()
+{abstract} +right()
+{abstract} +sharp_left()
+{abstract} +sharp_right()
+{abstract} +slight_left()
+{abstract} +slight_right()
+{abstract} +continue_way()
+{abstract} +enter_roundabout()
+{abstract} +exit_roundabout()
+{abstract} +uturn()
+{abstract} +arrival()
+{abstract} +departure()
+{abstract} +unknown()
++announce()
+}
+
+class AudioAnnouncer {
+- __say()
+}
+
+class AnnouncerManager {
++announce()
+}
+
+note "Ist implementiert als Python dict" as note_config
+note "Der Einstieg ins Programm ist hier" as note_main
+note "Führt alle Orte,\nwo Announcements\ngemacht werden\nmüssen." as note_pois
+note "Verwendet die\nRouting-Informationen\nvon Openrouteservice" as note_orsrouter
+note "Führt eine Liste aller Announcer" as note_announcermanager
+note "Für generische\nGeometrie-Operationen" as note_geometryhelper
+note "Announcer dienen\ndazu, Abbiegemeldungen\nauszugeben" as note_abstractannouncer
+
+enum config
+
+class GeometryHelper{
+{static} +get_distance()
+}
+
+class Gps {
++fetch_get_pos_bearing()
+-__connect()
+}
+
+abstract class AbstractRouter {
+{abstract} +update_pos()
+}
+
+class OrsRouter {
+-__calculate_routing_information()
+-__is_destination_reached()
+-__is_position_on_track()
+-__fetch_route()
+}
+
+class Main {
+-__init__()
+-__init_logging()
+}
+
+class Pois {
++checkin_position()
+}
+
+class VibraAnnouncer {
+-__impuls_left_right()
+-__impuls_left_front()
+-__impuls_left()
+-__impuls_left_back()
+-__impuls_right_front()
+-__impuls_right()
+-__impuls_right_back()
+-__impuls_middle()
+}
+
+AbstractAnnouncer <|.. AudioAnnouncer
+AbstractAnnouncer <|.. LogAnnouncer
+AbstractAnnouncer <|.. VibraAnnouncer
+
+OrsRouter ..> config: reads >
+VibraAnnouncer ..> config: reads >
+AnnouncerManager ..> config: reads >
+
+AnnouncerManager "1" *-- "*" AbstractAnnouncer: calls >
+
+AbstractRouter <|.. OrsRouter
+
+Main "1" *-- "1" Gps: reads from >
+Main "1" *-- "1" AnnouncerManager: creates >
+Main "1" *-- "1" AbstractRouter: creates >
+
+OrsRouter ..> GeometryHelper: uses >
+OrsRouter ..> AnnouncerManager: calls >
+OrsRouter "1" *-- "1" Pois
+
+config .. note_config
+Main .. note_main
+Pois .. note_pois
+OrsRouter .. note_orsrouter
+AnnouncerManager .. note_announcermanager
+GeometryHelper .. note_geometryhelper
+AbstractAnnouncer .. note_abstractannouncer
+
+@enduml
+
