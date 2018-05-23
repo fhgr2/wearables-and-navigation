@@ -2,7 +2,21 @@
 
 ## src
 
-Start `main.py` directly:
+### Start Flask
+
+Call
+
+    start-flask-dev.sh
+
+which then starts
+
+    flask-app.py
+
+which will start/stop
+
+    main.py
+
+### Start `main.py` directly:
 
     cd src/; export GPIOZERO_PIN_FACTORY=mock; ./main.py --lat 46.85449 --lon 9.52864
 
