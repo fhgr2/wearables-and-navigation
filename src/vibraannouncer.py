@@ -3,7 +3,11 @@ import logging
 import config
 import datetime
 import time
-import gpiozero as io
+
+# if gpiozero is used on a non-raspberry-pi system, the environment variable GPIOZERO_PIN_FACTORY=mock needs to be set
+# to work around needing to set the environment variable, we don't import gpiozero if the vibra announcer is disabled
+if config.announcers['vibra']:
+    import gpiozero as io
 
 class VibraAnnouncer(AbstractAnnouncer):
 
