@@ -13,11 +13,11 @@ class VibraAnnouncer(AbstractAnnouncer):
         super(VibraAnnouncer, self).__init__()
 
         # Output-GPIO zuordnen
-        self.__vm_lf = io.LED(5)  # GPIO 5 für VM left front
-        self.__vm_lb = io.LED(12) # GPIO 5 für VM left back
-        self.__vm_m  = io.LED(6)  # GPIO 6 für VM middle
-        self.__vm_rf = io.LED(13) # GPIO 13 für VM right front
-        self.__vm_rb = io.LED(16) # GPIO 16 für VM right back
+        self.__vm_left_front  = io.LED(5)  # GPIO 5 für VM left front
+        self.__vm_left_back   = io.LED(12) # GPIO 5 für VM left back
+        self.__vm_middle      = io.LED(6)  # GPIO 6 für VM middle
+        self.__vm_right_front = io.LED(13) # GPIO 13 für VM right front
+        self.__vm_right_back  = io.LED(16) # GPIO 16 für VM right back
 
         self.__impulsdauer = config.vibration['impulsdauer']
         self.__nachpause   = config.vibration['nachpause']
@@ -97,61 +97,61 @@ class VibraAnnouncer(AbstractAnnouncer):
         self.__logger.info("VibraAnnouncer.unknown() called, exit_number=" + str(exit_number))
 
     def __impuls_left_right(self):
-        self.__vm_lf.on()
-        self.__vm_lb.on()
-        self.__vm_rf.on()
-        self.__vm_rb.on()
+        self.__vm_left_front.on()
+        self.__vm_left_back.on()
+        self.__vm_right_front.on()
+        self.__vm_right_back.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_lf.off()
-        self.__vm_lb.off()
-        self.__vm_rf.off()
-        self.__vm_rb.off()
+        self.__vm_left_front.off()
+        self.__vm_left_back.off()
+        self.__vm_right_front.off()
+        self.__vm_right_back.off()
         time.sleep(self.__nachpause)
         
     def __impuls_left_front(self):
-        self.__vm_lf.on()
+        self.__vm_left_front.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_lf.off()
+        self.__vm_left_front.off()
         time.sleep(self.__nachpause)
         
     def __impuls_left(self):
-        self.__vm_lf.on()
-        self.__vm_lb.on()
+        self.__vm_left_front.on()
+        self.__vm_left_back.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_lf.off()
-        self.__vm_lb.off()
+        self.__vm_left_front.off()
+        self.__vm_left_back.off()
         time.sleep(self.__nachpause)
         
     def __impuls_left_back(self):
-        self.__vm_lb.on()
+        self.__vm_left_back.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_lb.off()
+        self.__vm_left_back.off()
         time.sleep(self.__nachpause)
 
     def __impuls_right_front(self):
-        self.__vm_rf.on()
+        self.__vm_right_front.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_rf.off()
+        self.__vm_right_front.off()
         time.sleep(self.__nachpause)
 
     def __impuls_right(self):
-        self.__vm_rf.on()
-        self.__vm_rb.on()
+        self.__vm_right_front.on()
+        self.__vm_right_back.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_rf.off()
-        self.__vm_rb.off()
+        self.__vm_right_front.off()
+        self.__vm_right_back.off()
         time.sleep(self.__nachpause)
 
     def __impuls_right_back(self):
-        self.__vm_rb.on()
+        self.__vm_right_back.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_rf.off()
+        self.__vm_right_front.off()
         time.sleep(self.__nachpause)
 
     def __impuls_middle(self):
-        self.__vm_m.on()
+        self.__vm_middle.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_m.off()
+        self.__vm_middle.off()
         time.sleep(self.__nachpause)
 
 
