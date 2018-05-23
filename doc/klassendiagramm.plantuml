@@ -82,6 +82,7 @@ AbstractAnnouncer <|.. VibraAnnouncer
 OrsRouter ..> config: reads >
 VibraAnnouncer ..> config: reads >
 AnnouncerManager ..> config: reads >
+Gps ..> config: reads >
 
 AnnouncerManager "1" *-- "*" AbstractAnnouncer: calls >
 
