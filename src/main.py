@@ -28,7 +28,7 @@ class Main:
         self.__logger.debug("Going to initialize router")
         router = OrsRouter(start, start_bear, destination, announcer_manager)
 
-        while self.__update_pos_wrapped(self.__gps.fetch_get_pos_bearing(), router) == False: time.sleep(1)
+        while self.__update_pos_wrapped(self.__gps.fetch_get_pos_bearing(), router) == False: time.sleep(config.routing['main_poll_interval'])
 
         self.__logger.info("Arrival at destination")
         # TODO: need to announce arrival at destination?

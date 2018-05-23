@@ -137,7 +137,7 @@ class Pois():
 
         # find first poi that is near current position
         for i, poi in enumerate(self.__pois):
-            if GeometryHelper.get_distance(poi['position'], cur) < config.routing['poi_reached_threshold']:
+            if GeometryHelper.get_distance(poi['position'], cur) < config.routing['poi_reached_threshold']: # TODO: maybe use better logic which includes the current speed
                 is_position_near_poi = True
                 matching_index = i
                 break
