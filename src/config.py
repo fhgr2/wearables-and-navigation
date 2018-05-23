@@ -1,7 +1,7 @@
 routing = {
     "poi_reached_threshold"         : 20, # consider a poi reached, when distance is smaller than this value in meters
     "destination_reached_threshold" : 20, # consider destination reached, when distance is smaller than this value in meters
-    "wrong_way_threshold"           : 32  # consider being on a wrong way when the distance is larger than this value in meters
+    "wrong_way_threshold"           : 32, # consider being on a wrong way when the distance is larger than this value in meters
     "main_poll_interval"            : 1   # sleep this many seconds before fetching the current position again (may be a float)
 }
 
@@ -15,7 +15,7 @@ vibration = {
 announcers = {
     "log"   : True,
     "audio" : True,
-    "vibra" : True
+    "vibra" : False
 }
 
 gpsd = {
