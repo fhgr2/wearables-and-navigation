@@ -11,7 +11,7 @@ from announcermanager import AnnouncerManager
 
 class Main:
     def __init__(self, args):
-        self.init_logging()
+        self.__init_logging()
 
         self.__logger.info("Going to initialize Gps()")
         self.__gps = Gps()
@@ -36,7 +36,7 @@ class Main:
     def __update_pos_wrapped(self, pos_bear, router):
         return router.update_pos(pos_bear[0], pos_bear[1])
 
-    def init_logging(self):
+    def __init_logging(self):
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.__logger = logging.getLogger(__name__)
         self.__logger.setLevel("DEBUG") # level for this class only
