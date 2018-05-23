@@ -30,10 +30,10 @@ class LogAnnouncer(AbstractAnnouncer):
         self.__logger.info("LogAnnouncer.continue_way() called")
 
     def enter_roundabout(self, exit_number):
-        self.__logger.info("LogAnnouncer.enter_roundabout() called")
+        self.__logger.info("LogAnnouncer.enter_roundabout() called with exit_number=" + str(exit_number))
 
     def exit_roundabout(self, exit_number):
-        self.__logger.info("LogAnnouncer.exit_roundabout() called")
+        self.__logger.info("LogAnnouncer.exit_roundabout() called with exit_number=" + str(exit_number))
 
     def uturn(self, exit_number):
         self.__logger.info("LogAnnouncer.uturn() called")

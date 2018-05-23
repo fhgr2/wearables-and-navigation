@@ -4,7 +4,7 @@
 
 ```bash
 sudo apt install python-gps
-pip3 install gpsd-py3 Flask
+pip3 install gpsd-py3 Flask gpiozero
 ```
 
 ## fake gpsd verwenden
