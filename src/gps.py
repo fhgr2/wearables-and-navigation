@@ -2,6 +2,7 @@ import gpsd # pip3 install gpsd-py3
 import logging
 from tenacity import retry, wait_fixed, retry_if_result, retry_if_exception_type # pip3 install tenacity
 from shapely.geometry import Point, LineString
+import config
 
 class Gps():
     def __init__(self):
@@ -38,11 +39,6 @@ class Gps():
 
     @retry(wait=wait_fixed(0.5))
     def __connect(self):
-        # TODO: logging
-        self.__logger.debug("Going to connect to gpsd")
+        self.__logger.info("Going to connect to gpsd, ip=" + config.gpsd['ip'] + " port=" + str(config.gpsd['port']))
 
-        # Connect to the local gpsd
-        #gpsd.connect()
-
-        # Connect somewhere else
-        gpsd.connect(host="127.0.0.1", port=55555)
+        gpsd.connect(host=config.gpsd['ip'], port=config.gpsd['port'])
