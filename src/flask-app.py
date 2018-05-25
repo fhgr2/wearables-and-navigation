@@ -1,5 +1,7 @@
 from flask import Flask, request, abort, current_app
 import subprocess
+import signal
+import sys
 
 app = Flask(__name__)
 
@@ -48,7 +50,16 @@ def kill_process():
 
 
 def get_proc():
-    return getattr(current_app, 'proc', None)
+    with app.app_context():
+        return getattr(current_app, 'proc', None)
 
 def set_proc(proc):
     current_app.proc = proc
+
+def handle_signals(signum, frame):
+    print("Received signal " + str(signum) + ". Going to stop routing process...")
+    kill_process()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, handle_signals)
+signal.signal(signal.SIGTERM, handle_signals)
