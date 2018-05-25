@@ -8,6 +8,7 @@ from orsrouter import OrsRouter
 from gps import Gps
 from shapely.geometry import Point, LineString
 from announcermanager import AnnouncerManager
+import config
 
 class Main:
     def __init__(self, args):
