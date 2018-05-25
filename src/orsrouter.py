@@ -87,7 +87,7 @@ class OrsRouter(AbstractRouter):
         #print("geometry[0]=" + str(convert.decode_polyline(routes['routes'][0]['geometry'][0])))
 
         pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(self.__route)
+        #pp.pprint(self.__route)
 
     def __coords2linestring(self, coords): # lon, lat
         points = []
