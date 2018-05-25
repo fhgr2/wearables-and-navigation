@@ -14,7 +14,7 @@ def myrouter():
     lon = request.args.get("lon", type=float)
     validate_coords(lat,lon)
 
-    kill_process(get_proc())
+    kill_process()
     proc = subprocess.Popen(["./main.py", "--lat", str(lat), "--lon", str(lon)])
     set_proc(proc)
 
@@ -24,9 +24,18 @@ def validate_coords(lat,lon):
     if lat<-90 or lat>90 or lon<-180 or lon>180:
         abort(400, "Invalid coordinates")
 
-def kill_process(p):
+
+@app.route("/kill")
+def graphic_kill():
+    kill_process()
+    return "Killed process"
+    
+
+def kill_process():
     # https://stackoverflow.com/a/17809718
     # https://docs.python.org/3/library/subprocess.html
+
+    p = get_proc()
 
     old_pid = None
     if p != None and p.poll() == None: # poll() == None means process is still alive
