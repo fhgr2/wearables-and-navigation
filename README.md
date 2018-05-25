@@ -20,8 +20,32 @@ Connect to WiFi using GUI.
 
 Install necessary software:
 
-    sudo apt install vim gpsbabel python-espeak libgeos-dev python-gps gpsd-clients
-    pip3 install gpsd-py3 tenacity openrouteservice Flask gpiozero shapely pyproj pyttsx3
+```bash
+sudo apt install vim gpsbabel python-espeak libgeos-dev python-gps gpsd-clients colordiff
+pip3 install gpsd-py3 tenacity openrouteservice Flask gpiozero shapely pyproj pyttsx3
+```
+
+Clone git repo:
+
+```bash
+cd ~; git clone https://github.com/htwchur/wearables-and-navigation.git
+```
+
+Setup autostart:
+
+```bash
+sudo cp ~/wearables-and-navigation/src/init/wan-router /etc/init.d/wan-router
+sudo chmod +x /etc/init.d/wan-router
+```
+
+Start software for the first time (this will happen automatically with future boots):
+
+```bash
+sudo /etc/init.d/wan-router start
+```
+
+
+
 
 ## src
 
