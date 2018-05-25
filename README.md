@@ -1,5 +1,15 @@
 # wearables-and-navigation
 
+## Setup
+
+The installation is based on Raspbian Stretch 2017-11-29.
+
+Change keyboard layout:
+
+```bash
+sudo dpkg-reconfigure keyboard-configuration # reboot afterwards
+```
+
 ## src
 
 ### Start Flask
