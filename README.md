@@ -10,6 +10,19 @@ Change keyboard layout:
 sudo dpkg-reconfigure keyboard-configuration # reboot afterwards
 ```
 
+Set timezone:
+
+```bash
+raspi-config # -> Localisation Options -> Change Timezone -> Europe -> Zurich
+```
+
+Connect to WiFi using GUI.
+
+Install necessary software:
+
+    sudo apt install vim gpsbabel python-espeak libgeos-dev python-gps gpsd-clients
+    pip3 install gpsd-py3 tenacity openrouteservice Flask gpiozero shapely pyproj pyttsx3
+
 ## src
 
 ### Start Flask
