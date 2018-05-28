@@ -1,12 +1,5 @@
 # Notizen Wearables Projekt
 
-## Benötigte Software installieren
-
-```bash
-sudo apt install python-gps
-pip3 install gpsd-py3 Flask gpiozero
-```
-
 ## fake gpsd verwenden
 
 ### Daten aufbereiten
@@ -53,15 +46,4 @@ python3 -m flask run --host=0.0.0.0
 
 - Über background tasks: https://stackoverflow.com/questions/22615475/flask-application-with-background-threads/39008301
 - requests.args.get gibt immer Strings zurück: https://teamtreehouse.com/community/what-does-requestargsget-return
-
-## Accountdaten
-
-### OpenRouteService
-
-```
-htw:***REMOVED***
-
-API-Key:
-***REMOVED***
-```
 
