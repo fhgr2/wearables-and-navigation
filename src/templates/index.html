@@ -7,11 +7,14 @@
 <div><button lat="46.85286" lon="9.51322" class="coord-submitter" type="button">HTW Hauptgebäude</button></div>
 <div><button lat="46.85381" lon="9.51410" class="coord-submitter" type="button">HTW Gebäude B</button></div>
 <div><button lat="46.84785" lon="9.50129" class="coord-submitter" type="button">Medienhaus</button></div>
-<script>
+
+<div><button id="killer-button" type="button">Stop Routing</button></div>
+
+<script type="text/javascript">
 function send_coords(el) {
-	$.ajax({type: "POST", url: "router?lat=" + el.attr("lat") + "&lon=" + el.attr("lon") ,
+	$.ajax({type: "POST", url: "router?lat=" + el.attr("lat") + "&lon=" + el.attr("lon"),
 		success:function(result){
-			alert('ok');
+			// do this in case of success
 	}});
 }
 
@@ -21,7 +24,15 @@ $(document).ready(function(){
 	$(".coord-submitter").click(function(e){
 		e.preventDefault();
 		send_coords($(this));
-	})
-})
+	});
+
+	$("#killer-button").click(function(e){
+		e.preventDefault();
+		$.ajax({type: "POST", url: "/kill",
+			success:function(result){
+			// do this in case of success
+		}});
+	});
+});
 
  </script>

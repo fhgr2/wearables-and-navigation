@@ -27,7 +27,7 @@ def validate_coords(lat,lon):
         abort(400, "Invalid coordinates")
 
 
-@app.route("/kill")
+@app.route("/kill", methods=["GET", "POST"])
 def graphic_kill():
     kill_process()
     return "Killed process"
