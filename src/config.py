@@ -1,8 +1,11 @@
 routing = {
-    "poi_reached_threshold"         : 20, # consider a poi reached, when distance is smaller than this value in meters
-    "destination_reached_threshold" : 20, # consider destination reached, when distance is smaller than this value in meters
-    "wrong_way_threshold"           : 32, # consider being on a wrong way when the distance is larger than this value in meters
-    "main_poll_interval"            : 1   # sleep this many seconds before fetching the current position again (may be a float)
+    "poi_reached_threshold"         : 20,     # consider a poi reached, when distance is smaller than this value in meters
+    "destination_reached_threshold" : 20,     # consider destination reached, when distance is smaller than this value in meters
+    "wrong_way_threshold"           : 32,     # consider being on a wrong way when the distance is larger than this value in meters
+    "bearings_tolerance"            : 100,    # in degress, see "bearings" at https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
+    "allow_uturn"                   : "true", # allow routing engine to give uturn instruction
+    "ors_routing_profile"           : "cycling-safe", # one of: cycling-regular, cycling-road, cycling-safe, cycling-mountain, cycling-tour, cycling-electric
+    "main_poll_interval"            : 1       # sleep this many seconds before fetching the current position again (may be a float)
 }
 
 vibration = {

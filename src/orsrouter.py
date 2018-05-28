@@ -70,8 +70,7 @@ class OrsRouter(AbstractRouter):
         self.__logger.info("OrsRouter.__fetch_route() called, start=" + str(self.__start) + "start_bear=" + str(self.__start_bear) + "destination=" + str(self.__destination))
         in_coords = ((self.__start.x,self.__start.y), (self.__destination.x,self.__destination.y))
 
-        routes = directions(self.__client, in_coords, profile="cycling-safe", instructions="true", bearings=[[40,45]], continue_straight="true", optimized="false") # TODO: add further parameters, see https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
-        # TODO: fix bearings=...
+        routes = directions(self.__client, in_coords, profile=config.routing["ors_routing_profile"], instructions="true", bearings=[[self.__start_bear,config.routing['bearings_tolerance']]], continue_straight=config.routing['allow_uturn'], optimized="false") # for more options, see https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
 
         #print("routes=" + str(routes))
         #print("route=" + str(routes['routes'][0]))
