@@ -1,0 +1,27 @@
+<!doctype html>
+<title>Hello from Flask</title>
+<script src="{{url_for('static', filename='jquery-3.3.1.js')}}"></script>
+<h1>Hello, World!</h1>
+<div>Hello, World! To start routing call something like: http://127.0.0.1:5000/router?lat=46.85449&lon=9.52864</div>
+<div><button lat="46.85430" lon="9.52841" class="coord-submitter" type="button">Bahnhof</button></div>
+<div><button lat="46.85286" lon="9.51322" class="coord-submitter" type="button">HTW Hauptgebäude</button></div>
+<div><button lat="46.85381" lon="9.51410" class="coord-submitter" type="button">HTW Gebäude B</button></div>
+<div><button lat="46.84785" lon="9.50129" class="coord-submitter" type="button">Medienhaus</button></div>
+<script>
+function send_coords(el) {
+	$.ajax({type: "POST", url: "router?lat=" + el.attr("lat") + "&lon=" + el.attr("lon") ,
+		success:function(result){
+			alert('ok');
+	}});
+}
+
+// inspired by https://stackoverflow.com/a/35203359
+
+$(document).ready(function(){
+	$(".coord-submitter").click(function(e){
+		e.preventDefault();
+		send_coords($(this));
+	})
+})
+
+ </script>

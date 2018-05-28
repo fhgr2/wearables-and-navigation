@@ -1,4 +1,4 @@
-from flask import Flask, request, abort, current_app
+from flask import Flask, request, abort, current_app, render_template
 import subprocess
 import signal
 import sys
@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hello, World! To start routing call something like: http://127.0.0.1:5000/router?lat=46.85449&lon=9.52864'
+    return render_template('index.html')
 
 
-@app.route("/router")
+@app.route("/router", methods=["GET", "POST"])
 def myrouter():
     lat = request.args.get("lat", type=float)
     lon = request.args.get("lon", type=float)
