@@ -27,6 +27,12 @@ Change password to "***REMOVED***":
 passwd
 ```
 
+Block the kernel module responsible for the internal soundcard to improve chances that a Bluetooth speaker will be reconnected to after a reboot: Create a file `/etc/modprobe.d/blacklist.conf` with the following content:
+
+```
+blacklist snd_bcm2835
+```
+
 Allow flask to use port 5000 (without root privileges) and at the same time users to connect on http default port 80, by redirecting traffic directed to port 80 onto port 5000:
 
 ```bash
