@@ -214,4 +214,8 @@ API-Key:
 ***REMOVED***
 ```
 
+### Raspberry Pi Zero W
 
+```
+pi:***REMOVED***
+```
