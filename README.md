@@ -13,16 +13,49 @@ sudo dpkg-reconfigure keyboard-configuration # reboot afterwards
 Set timezone:
 
 ```bash
-raspi-config # -> Localisation Options -> Change Timezone -> Europe -> Zurich
+sudo raspi-config # -> Localisation Options -> Change Timezone -> Europe -> Zurich
 ```
+
+Enable SSH:
+
+```bash
+sudo raspi-config # -> 5 Interfacing Options -> P2 SSH -> Yes
+```
+
+Change password to "***REMOVED***":
+```
+passwd
+```
+
+Enable serial interface:
+```bash
+sudo raspi-config # -> 5 Interfacing Options -> P6 Serial -> login shell: no -> serial port hardware: yes
+```
+
 
 Connect to WiFi using GUI.
 
 Install necessary software:
 
 ```bash
-sudo apt install vim gpsbabel python-espeak libgeos-dev python-gps gpsd-clients colordiff
-pip3 install gpsd-py3 tenacity openrouteservice Flask gpiozero shapely pyproj pyttsx3
+sudo apt-get update
+sudo apt install vim gpsbabel python-espeak libgeos-dev gpsd gpsd-clients python-gps colordiff # install OS packages
+pip3 install gpsd-py3 tenacity openrouteservice Flask gpiozero shapely pyproj pyttsx3 # install python packages
+```
+
+Configure gpsd, by ensuring that the following settings are present in `/etc/default/gpsd`:
+
+```
+USBAUTO="false"
+GPSD_OPTIONS="/dev/serial0"
+GPSD_SOCKET="/var/run/gpsd.sock"
+```
+
+Enable and start gpsd daemon:
+
+```bash
+sudo systemctl enable gpsd.socket
+sudo systemctl start gpsd.socket
 ```
 
 Clone git repo:
