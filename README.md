@@ -27,13 +27,37 @@ Change password to "***REMOVED***":
 passwd
 ```
 
+Allow flask to use port 5000 (without root privileges) and at the same time users to connect on http default port 80, by redirecting traffic directed to port 80 onto port 5000:
+
+```bash
+sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 5000
+sudo mkdir /etc/iptables
+sudo sh -c 'sudo iptables-save > /etc/iptables/rules.v4' # iptables rules are ephemeral, save them into a file
+```
+
+Load iptables rules at network startup by creating the file `/etc/network/if-pre-up.d/iptablesload` with the following content:
+
+```bash
+#!/bin/sh
+iptables-restore < /etc/iptables/rules.v4
+exit 0
+```
+
+make it executable by issuing:
+
+```bash
+sudo chmod +x /etc/network/if-pre-up.d/iptablesload
+```
+
+(Sources: https://askubuntu.com/q/444729 , https://serverfault.com/q/246829)
+
 Enable serial interface:
+
 ```bash
 sudo raspi-config # -> 5 Interfacing Options -> P6 Serial -> login shell: no -> serial port hardware: yes
 ```
 
-
-Connect to WiFi using GUI.
+Connect to WiFi (ideally an Android Hotspot) using GUI (see top-right corner)
 
 Install necessary software:
 
@@ -73,6 +97,7 @@ Setup autostart:
 ```bash
 sudo cp ~/wearables-and-navigation/src/init/wan-router /etc/init.d/wan-router
 sudo chmod +x /etc/init.d/wan-router
+sudo update-rc.d wan-router defaults
 ```
 
 Start software for the first time (this will happen automatically with future boots):
