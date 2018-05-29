@@ -30,9 +30,10 @@ passwd
 Allow flask to use port 5000 (without root privileges) and at the same time users to connect on http default port 80, by redirecting traffic directed to port 80 onto port 5000:
 
 ```bash
-sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 5000
+sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 5000 # port redirection for outsiders
+sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 5000 # port redirection for localhost, see https://askubuntu.com/a/579540
 sudo mkdir /etc/iptables
-sudo sh -c 'sudo iptables-save > /etc/iptables/rules.v4' # iptables rules are ephemeral, save them into a file
+sudo sh -c 'sudo iptables-save > /etc/iptables/rules.v4' # iptables rules are ephemeral, save them into a file, from https://stackoverflow.com/a/82278
 ```
 
 Load iptables rules at network startup by creating the file `/etc/network/if-pre-up.d/iptablesload` with the following content:
@@ -49,7 +50,7 @@ make it executable by issuing:
 sudo chmod +x /etc/network/if-pre-up.d/iptablesload
 ```
 
-(Sources: https://askubuntu.com/q/444729 , https://serverfault.com/q/246829)
+(Sources: https://askubuntu.com/q/444729 , https://serverfault.com/q/246829, https://www.thomas-krenn.com/de/wiki/Iptables_Firewall_Regeln_dauerhaft_speichern , https://help.ubuntu.com/community/IptablesHowTo#Saving_iptables )
 
 Enable serial interface:
 
