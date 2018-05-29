@@ -39,7 +39,7 @@ Install necessary software:
 
 ```bash
 sudo apt-get update
-sudo apt install vim gpsbabel python-espeak libgeos-dev gpsd gpsd-clients python-gps colordiff # install OS packages
+sudo apt install vim gpsbabel python-espeak libgeos-dev gpsd gpsd-clients python-gps colordiff tcpdump # install OS packages
 pip3 install gpsd-py3 tenacity openrouteservice Flask gpiozero shapely pyproj pyttsx3 # install python packages
 ```
 
@@ -99,6 +99,7 @@ In `src/config.py` you'll find some configurable values, among these are:
 - `announcers`: What types of announcers to be used
 - `gpsd`: Where to read GPS information (ip and port of a gpsd daemon, may be on localhost)
 
+Point your browser at `x.x.x.x:5000` (replace x.x.x.x with actual IP address) to reach the GUI. If you're using an Android Hotspot, you can get the IP addresses of connected clients using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
 
 ### Development
 
