@@ -188,6 +188,16 @@ to a value of `0.1` (seconds).
 
 The class diagram was rendered using http://plantuml.com/ .
 
+## Open issues
+
+### Bearings
+
+Routing requests in `orsrouter.py` contain the current bearing (driving direction, also known as track) in order to get a higher quality driving instruction. A bearing plus tolerance can be submitted as described in https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions (parameter `bearings`). There are two issues:
+
+- A test (by walking) indicated that the bearing read through gpsd is sometimes zero, about every tenth read. This probably indicates invalid values.
+- When routing to a certain destination is chosen, this would normally happen when not driving. The direction read from gpsd will then be nonsensical.
+
+
 ## Links
 
 - https://docs.google.com/document/d/***REMOVED***/edit
