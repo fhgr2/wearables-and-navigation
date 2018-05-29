@@ -23,5 +23,5 @@ announcers = {
 
 gpsd = {
     "ip"   : "127.0.0.1",
-    "port" : 55555
+    "port" : 2947 # fake -> 55555 , real -> 2947
 }
