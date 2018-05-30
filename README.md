@@ -113,7 +113,7 @@ A restart may be necessary in order to make everything work smoothly (especially
 
 ## Operation
 
-Point your browser at `x.x.x.x:5000` (replace x.x.x.x with actual IP address) to reach the GUI. If you're using an Android Hotspot, you can get the IP addresses of connected clients using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
+Point your browser at the IP address of the Raspberry Pi to reach the GUI. If you're using an Android Hotspot, you can get the IP addresses of connected clients using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
 
 The GUI will allow you to route yourself to predefined locations or to stop the currently running routing.
 
