@@ -1,6 +1,6 @@
 from abstractrouter import AbstractRouter
 import logging
-import openrouteservice # TODO: wie installieren?
+import openrouteservice # pip3 install openrouteservice
 from openrouteservice.directions import directions, convert
 import pprint # only for debugging
 import pyproj
@@ -75,8 +75,7 @@ class OrsRouter(AbstractRouter):
         #print("routes=" + str(routes))
         #print("route=" + str(routes['routes'][0]))
 
-        # TODO: overwrite destination coordinates with the ones received from ORS, since there may be no way leading exactly to the desired destination coordinates
-        # TODO: maybe it's better to implement "arrival at the destination" using the same technique as the other pois
+        # TODO: maybe overwrite destination coordinates with the ones received from ORS, since there may be no way leading exactly to the desired destination coordinates
 
         self.__route = routes['routes'][0]
 
@@ -129,14 +128,13 @@ class Pois():
 
         If no, return None and keep all POIs.
         """
-        # TODO: in case of no: return None or (None,None) ?
 
         is_position_near_poi = False
         matching_index = -1
 
         # find first poi that is near current position
         for i, poi in enumerate(self.__pois):
-            if GeometryHelper.get_distance(poi['position'], cur) < config.routing['poi_reached_threshold']: # TODO: maybe use better logic which includes the current speed
+            if GeometryHelper.get_distance(poi['position'], cur) < config.routing['poi_reached_threshold']:
                 is_position_near_poi = True
                 matching_index = i
                 break

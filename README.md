@@ -204,6 +204,15 @@ Routing requests in `orsrouter.py` contain the current bearing (driving directio
 - A test (by walking) indicated that the bearing read through gpsd is sometimes zero, about every tenth read. This probably indicates invalid values.
 - When routing to a certain destination is chosen, this would normally happen when not driving. The direction read from gpsd will then be nonsensical.
 
+### Make time of announcement depending on current speed
+
+We should check if the usability will be better if we make the exact point of time of an announcement depending on the current speed of the driver.
+
+### Overwrite destination coordinates
+
+Since user-chosen destination coordinates may not exactly be reached using a routing engine such as Openrouteservice, it might be better to look at the destination coordinates according to the *routing engine* and not those specified by the *user* to compare if the destination has been reached.
+
+
 
 ## Links
 
