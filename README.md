@@ -95,10 +95,6 @@ Clone git repo:
 cd ~; git clone https://github.com/htwchur/wearables-and-navigation.git
 ```
 
-Configure gpsd configuration:
-
-TODO
-
 Setup autostart:
 
 ```bash
@@ -113,16 +109,13 @@ Start software for the first time (this will happen automatically with future bo
 sudo /etc/init.d/wan-router start
 ```
 
+A restart may be necessary in order to make everything work smoothly (especially gpsd).
 
-## src
+## Operation
 
-### Summary
+Point your browser at `x.x.x.x:5000` (replace x.x.x.x with actual IP address) to reach the GUI. If you're using an Android Hotspot, you can get the IP addresses of connected clients using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
 
-`/etc/init.d/wan-router start` --> `start-flask-dev.sh` --> `flask-app.py` --> `main.py`
-
-### Operation
-
-The application will be installed and used as a daemon. The daemon control script is at `/etc/init.d/wan-router`. It expects the code to be at `/home/pi/wearables-and-navigation/src/`. Specifically, it will launch `start-flask-dev.sh` which then starts the [Flask](https://de.wikipedia.org/wiki/Flask) application `flask-app.py` including a webserver, which in turn starts a new process of `main.py` for every newly requested destination. The setup is a bit atypically for a web application because the calculations (routing) will only just have started when Flask returns an HTTP response. The routing (main.py) will be started asynchronously as a new process. If a new routing request or the ressource `/kill` is called, the old routing process will be terminated and a new process will be started.
+The GUI will allow you to route yourself to predefined locations or to stop the currently running routing.
 
 In `src/config.py` you'll find some configurable values, among these are:
 
@@ -131,11 +124,21 @@ In `src/config.py` you'll find some configurable values, among these are:
 - `announcers`: What types of announcers to be used
 - `gpsd`: Where to read GPS information (ip and port of a gpsd daemon, may be on localhost)
 
-Point your browser at `x.x.x.x:5000` (replace x.x.x.x with actual IP address) to reach the GUI. If you're using an Android Hotspot, you can get the IP addresses of connected clients using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
+Issue the following command to make configuration changes work:
 
-### Development
+```bash
+sudo /etc/init.d/wan-router restart
+```
 
-#### Starting `main.py` directly:
+
+## Development
+
+Summary: `/etc/init.d/wan-router start` --> `start-flask-dev.sh` --> `flask-app.py` --> `main.py`
+
+The application will be installed and used as a daemon. The daemon control script is at `/etc/init.d/wan-router`. It expects the code to be at `/home/pi/wearables-and-navigation/src/`. Specifically, it will launch `start-flask-dev.sh` which then starts the [Flask](https://de.wikipedia.org/wiki/Flask) application `flask-app.py` including a webserver, which in turn starts a new process of `main.py` for every newly requested destination. The setup is a bit atypically for a web application because the calculations (routing) will only just have started when Flask returns an HTTP response. The routing (main.py) will be started asynchronously as a new process. If a new routing request or the ressource `/kill` is called, the old routing process will be terminated and a new process will be started.
+
+
+### Starting `main.py` directly:
 
     cd src/; export GPIOZERO_PIN_FACTORY=mock; ./main.py --lat 46.85449 --lon 9.52864
 
@@ -144,13 +147,13 @@ Explanation:
 - Setting `GPIOZERO_PIN_FACTORY` is necessary (only) on a system that is not a Raspberry Pi
 - `--lat` and `--lon` are the destination coordinates (these are necessary)
 
-#### Working with Flask
+### Working with Flask
 
 In order for signal handling in the Flask application to work, unfortunately one needs to disable auto-reloading of files by setting `FLASK_DEBUG=1` in `start-flask-dev.sh`. When changing a file, one needs to stop Flask by pressing `Ctrl-c` or calling `sudo /etc/init.d/wan-router stop` and then restart it.
 
 The HTML code for the GUI can be found in `src/templates/`, which uses [Jinja2](http://jinja.pocoo.org/docs) templates.
 
-#### Faking the GPS position
+### Faking the GPS position
 
 Instead of using a hardware GPS, we can also inject faked GPS data. For this we need either a `.nmea` file or a `.gpx` file that will be converted to NMEA format. You can find a converter in `utils/`. Usage:
 
@@ -181,8 +184,12 @@ To increase the processing speed, decrement both
 
 to a value of `0.1` (seconds).
 
+### Logfiles
 
-#### Class diagram
+Logs are written to `/var/log/wan-router.log` and `/var/log/wan-router.err`. These paths are defined in `/etc/init.d/wan-router`.
+
+
+### Class diagram
 
 ![Class diagram](https://raw.githubusercontent.com/htwchur/wearables-and-navigation/master/doc/klassendiagramm.png?token=AEgeBcwyK-BGEYOd-_7Hbdl9AD3iPqvnks5bENfjwA%3D%3D "Class diagram")
 
