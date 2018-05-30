@@ -9,7 +9,8 @@ class AudioAnnouncer(AbstractAnnouncer):
         self.__logger.info("AudioAnnouncer.__init__() called")
         super(AudioAnnouncer, self).__init__()
         self.__engine = pyttsx3.init();
-        self.__engine.setProperty('rate', 130)
+        self.__engine.setProperty('rate', 130) # words per minute
+        self.__engine.setProperty('volume', 1.0) # floating point in the range 0.0 to 1.0 inclusive
 
     def __say(self, text):
         self.__engine.say(text + " I repeat. " + text);
