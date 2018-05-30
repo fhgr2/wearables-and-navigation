@@ -1,5 +1,5 @@
 routing = {
-    "poi_reached_threshold"         : 20,     # consider a poi reached, when distance is smaller than this value in meters
+    "poi_reached_threshold"         : 30,     # consider a poi reached, when distance is smaller than this value in meters
     "destination_reached_threshold" : 20,     # consider destination reached, when distance is smaller than this value in meters
     "wrong_way_threshold"           : 32,     # consider being on a wrong way when the distance is larger than this value in meters
     "bearings_tolerance"            : 100,    # in degress, see "bearings" at https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
