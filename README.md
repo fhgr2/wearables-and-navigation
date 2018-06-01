@@ -195,7 +195,7 @@ Logs are written to `/var/log/wan-router.log` and `/var/log/wan-router.err`. The
 
 ### Class diagram
 
-![Class diagram](https://raw.githubusercontent.com/htwchur/wearables-and-navigation/master/doc/klassendiagramm.png?token=AEgeBcwyK-BGEYOd-_7Hbdl9AD3iPqvnks5bENfjwA%3D%3D "Class diagram")
+![Class diagram](doc/klassendiagramm.png)
 
 The class diagram was rendered using http://plantuml.com/ .
 
