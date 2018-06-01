@@ -151,7 +151,11 @@ Explanation:
 
 In order for signal handling in the Flask application to work, unfortunately one needs to disable auto-reloading of files by setting `FLASK_DEBUG=1` in `start-flask-dev.sh`. When changing a file, one needs to stop Flask by pressing `Ctrl-c` or calling `sudo /etc/init.d/wan-router stop` and then restart it.
 
-The HTML code for the GUI can be found in `src/templates/`, which uses [Jinja2](http://jinja.pocoo.org/docs) templates.
+The HTML code for the GUI can be found in `src/templates/`, which uses [Jinja2](http://jinja.pocoo.org/docs) templates. Use the follwing code to add destinations:
+
+```bash
+<div><button lat="46.85286" lon="9.51322" class="coord-submitter" type="button">HTW Hauptgebäude</button></div>
+```
 
 ### Faking the GPS position
 
