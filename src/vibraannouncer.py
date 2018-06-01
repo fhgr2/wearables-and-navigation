@@ -149,7 +149,7 @@ class VibraAnnouncer(AbstractAnnouncer):
     def __impuls_right_back(self):
         self.__vm_right_back.on()
         time.sleep(self.__impulsdauer)
-        self.__vm_right_front.off()
+        self.__vm_right_back.off()
         time.sleep(self.__nachpause)
 
     def __impuls_middle(self):
