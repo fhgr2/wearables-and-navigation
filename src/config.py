@@ -18,7 +18,7 @@ vibration = {
 announcers = {
     "log"   : True,
     "audio" : True,
-    "vibra" : False
+    "vibra" : True
 }
 
 gpsd = {
