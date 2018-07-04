@@ -27,7 +27,8 @@ Change password to "***REMOVED***":
 passwd
 ```
 
-Block the kernel module responsible for the internal soundcard to improve chances that a Bluetooth speaker will be reconnected to after a reboot: Create a file `/etc/modprobe.d/blacklist.conf` with the following content:
+Block the kernel module responsible for the internal soundcard to improve 
+chances that a Bluetooth speaker will be reconnected to after a reboot: Create a file `/etc/modprobe.d/blacklist.conf` with the following content:
 
 ```
 blacklist snd_bcm2835
@@ -113,7 +114,9 @@ A restart may be necessary in order to make everything work smoothly (especially
 
 ## Operation
 
-Point your browser at the IP address of the Raspberry Pi to reach the GUI. If you're using an Android Hotspot, you can get the IP addresses of connected clients using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
+Point your browser at the IP address of the Raspberry Pi to reach the GUI. 
+If you're using an Android Hotspot, you can get the IP addresses of connected clients 
+using the app [Termux](https://play.google.com/store/apps/details?id=com.termux) and issuing the command `ip neigh`.
 
 The GUI will allow you to route yourself to predefined locations or to stop the currently running routing.
 

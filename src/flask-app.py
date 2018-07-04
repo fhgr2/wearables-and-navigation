@@ -2,6 +2,7 @@ from flask import Flask, request, abort, current_app, render_template
 import subprocess
 import signal
 import sys
+import os
 
 app = Flask(__name__)
 
@@ -32,6 +33,16 @@ def graphic_kill():
     kill_process()
     return "Killed process"
     
+
+@app.route("/shutdown", methods=["GET", "POST"])
+def raspberry_shutdown():
+    kill_process()  # first kill process before shutdown
+    shutdown_raspberry()
+    return "Killed process and Shutdown"
+    
+def shutdown_raspberry:
+    os.system('sudo shutdown -h now')
+ 
 
 def kill_process():
     # https://stackoverflow.com/a/17809718

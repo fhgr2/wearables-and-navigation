@@ -9,9 +9,12 @@
 <div><button lat="46.84785" lon="9.50129" class="coord-submitter" type="button">Medienhaus</button></div>
 <div><button lat="46.85484" lon="9.51539" class="coord-submitter" type="button">Pizzeria Dieci Chur</button></div>
 <div><button lat="46.85516" lon="9.52035" class="coord-submitter" type="button">Bäckerei Konditorei Nietlispach</button></div>
-
+<p></p>
 <div>To stop routing, press the following button:</div>
 <div><button id="killer-button" type="button">Stop Routing</button></div>
+<p></p>
+<div>To shutdown, press the following button:</div>
+<div><button id="shutdown-button" type="button">Shutdown</button></div>
 
 <script type="text/javascript">
 function send_coords(el) {
@@ -32,6 +35,14 @@ $(document).ready(function(){
 	$("#killer-button").click(function(e){
 		e.preventDefault();
 		$.ajax({type: "POST", url: "/kill",
+			success:function(result){
+			// do this in case of success
+		}});
+	});
+
+	$("#shutdown-button").click(function(e){
+		e.preventDefault();
+		$.ajax({type: "POST", url: "/shutdown",
 			success:function(result){
 			// do this in case of success
 		}});
