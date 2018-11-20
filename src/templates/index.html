@@ -1,7 +1,24 @@
 <!doctype html>
-<title>Hello from Flask</title>
+<title>Wearable Navigation</title>
 <script src="{{url_for('static', filename='jquery-3.3.1.js')}}"></script>
 <h1>Wearable Navigation</h1>
+<!-- 
+Test out the options in https://openrouteservice.org/dev/#/api-docs/directions/get with the API interactive examples
+Coordinates: 9.52841,46.85430|9.51322,46.85286
+API Key: ***REMOVED***
+Python Code:
+
+from urllib2 import Request, urlopen
+
+headers = {
+  'Accept': 'application/json; charset=utf-8'
+}
+request = Request('https://api.openrouteservice.org/directions?api_key=***REMOVED***&coordinates=9.52841,46.85430%7C9.51322,46.85286&profile=cycling-regular&instructions=true&bearings=34,10%7C120,20&continue_straight=true&optimized=false', headers=headers)
+
+response_body = urlopen(request).read()
+print response_body
+
+-->
 <div>To start routing, press one of the following buttons:</div>
 <div><button lat="46.85400" lon="9.50226" class="coord-submitter" type="button">Testing 1: Gabentempel</button></div>
 <div><button lat="46.85710" lon="9.51320" class="coord-submitter" type="button">Testing 2: Felsenaustrasse</button></div>
