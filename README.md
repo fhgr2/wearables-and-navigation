@@ -240,5 +240,12 @@ API-Key:
 ### Raspberry Pi Zero W
 
 ```
-pi:***REMOVED***
+Username: pi
+Password: ***REMOVED***
 ```
+## Software Versions
+- Openrouteservice: 4.7
+- Python: 2.7.13
+### Changes 2018-11-20 / mv
+- changed in src/config.py in routing ors_routing_profile from cycling-safe to cycling-regular
+- added testing routes in src/templates/index.html

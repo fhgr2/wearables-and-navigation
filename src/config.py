@@ -4,7 +4,7 @@ routing = {
     "wrong_way_threshold"           : 32,     # consider being on a wrong way when the distance is larger than this value in meters
     "bearings_tolerance"            : 100,    # in degress, see "bearings" at https://openrouteservice-py.readthedocs.io/en/latest/#module-openrouteservice.directions
     "allow_uturn"                   : "true", # allow routing engine to give uturn instruction
-    "ors_routing_profile"           : "cycling-safe", # one of: cycling-regular, cycling-road, cycling-safe, cycling-mountain, cycling-tour, cycling-electric
+    "ors_routing_profile"           : "cycling-regular", # one of: cycling-regular, cycling-road, cycling-safe, cycling-mountain, cycling-tour, cycling-electric. In openrouteservice.org API version 4.7 do not use cycling-safe
     "main_poll_interval"            : 1       # sleep this many seconds before fetching the current position again (may be a float)
 }
 
