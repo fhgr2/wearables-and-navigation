@@ -6,10 +6,12 @@ import os
 
 app = Flask(__name__)
 
+#Prevent cache problems
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 10000
+
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route("/router", methods=["GET", "POST"])
 def myrouter():
@@ -32,17 +34,15 @@ def validate_coords(lat,lon):
 def graphic_kill():
     kill_process()
     return "Killed process"
-    
 
 @app.route("/shutdown", methods=["GET", "POST"])
 def raspberry_shutdown():
     kill_process()  # first kill process before shutdown
     shutdown_raspberry()
     return "Killed process and Shutdown"
-    
-def shutdown_raspberry:
+
+def shutdown_raspberry():
     os.system('sudo shutdown -h now')
- 
 
 def kill_process():
     # https://stackoverflow.com/a/17809718
