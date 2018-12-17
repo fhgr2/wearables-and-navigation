@@ -1,72 +1,104 @@
 <!doctype html>
-<title>Wearable Navigation</title>
-<script src="{{url_for('static', filename='jquery-3.3.1.js')}}"></script>
-<h1>Wearable Navigation</h1>
-<!-- 
-Test out the options in https://openrouteservice.org/dev/#/api-docs/directions/get with the API interactive examples
-Coordinates: 9.52841,46.85430|9.51322,46.85286
-API Key: ***REMOVED***
-Python Code:
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Wearable Navigation!</title>
+    <script src="{{url_for('static', filename='jquery-3.3.1.js')}}"></script>
+    <!-- see https://stackoverflow.com/questions/22259847/application-not-picking-up-css-file-flask-python -->
+    <!-- not used <link rel= "stylesheet" type= "text/css" href="{{url_for('static',filename='styles/body.css')}}"> -->
+    <style>
+        /* Styling status and buttons */
+        #status {
+            color: red;
+            font-weight: bold;
+        }
+        div {
+            margin-bottom: 10px;
+        }
+        button {
+            height: 40px;
+        }
+        button, button.normal {
+            background-color: lightgrey;
+        }
+        button.pressed {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wearable Navigation</h1>
+    <!-- <p id="status">&nbsp;</p> -->
+    <!-- 
+    Test out the options in https://openrouteservice.org/dev/#/api-docs/directions/get with the API interactive examples
+    Coordinates: 9.52841,46.85430|9.51322,46.85286
+    API Key: ***REMOVED***
+    -->
+    <div>To start routing, press one of the following buttons:</div>
+    <div><button lat="46.85400" lon="9.50226" class="coord-submitter" type="button">Testing 1: Gabentempel</button></div>
+    <div><button lat="46.85710" lon="9.51320" class="coord-submitter" type="button">Testing 2: Felsenaustrasse</button></div>
+    <div><button lat="46.84923" lon="9.51659" class="coord-submitter" type="button">Testing 3: Salvatorenstrasse</button></div>
+    <div><button lat="47.367091" lon="8.544834" class="coord-submitter" type="button">Bellevue Zürich</button></div>
+    <div><button lat="46.85430" lon="9.52841" class="coord-submitter" type="button">Bahnhof Chur</button></div>
+    <div><button lat="46.85286" lon="9.51322" class="coord-submitter" type="button">HTW Hauptgebäude</button></div>
+    <div><button lat="46.85381" lon="9.51410" class="coord-submitter" type="button">HTW Gebäude B</button></div>
+    <div><button lat="46.84785" lon="9.50129" class="coord-submitter" type="button">Medienhaus</button></div>
+    <div><button lat="46.85484" lon="9.51539" class="coord-submitter" type="button">Pizzeria Dieci Chur</button></div>
+    <div><button lat="46.85516" lon="9.52035" class="coord-submitter" type="button">Bäckerei Konditorei Nietlispach</button></div>
+    <p>&nbsp;</p>
+    <div>To stop routing, press the following button:</div>
+    <div><button id="killer-button" type="button">Stop Routing</button></div>
+    <p>&nbsp;</p>
+    <div>To shutdown, press the following button:</div>
+    <div><button id="shutdown-button" type="button">Shutdown</button></div>
 
-from urllib2 import Request, urlopen
+    <script type="text/javascript">
+        function send_coords(el) {
+            $.ajax({type: "POST", url: "router?lat=" + el.attr("lat") + "&lon=" + el.attr("lon"),
+                success:function(result){
+                    console.log(result);
+                    // do this in case of success
+            }});
+        };
 
-headers = {
-  'Accept': 'application/json; charset=utf-8'
-}
-request = Request('https://api.openrouteservice.org/directions?api_key=***REMOVED***&coordinates=9.52841,46.85430%7C9.51322,46.85286&profile=cycling-regular&instructions=true&bearings=34,10%7C120,20&continue_straight=true&optimized=false', headers=headers)
+        // inspired by https://stackoverflow.com/a/35203359
 
-response_body = urlopen(request).read()
-print response_body
+        $(document).ready(function(){
+            // Buttons change color when clicked
+            $('button').click(function() {
+                $('button').addClass("normal");
+                $('button').removeClass("pressed");
+                $(this).addClass('pressed');
+            });
 
--->
-<div>To start routing, press one of the following buttons:</div>
-<div><button lat="46.85400" lon="9.50226" class="coord-submitter" type="button">Testing 1: Gabentempel</button></div>
-<div><button lat="46.85710" lon="9.51320" class="coord-submitter" type="button">Testing 2: Felsenaustrasse</button></div>
-<div><button lat="46.84923" lon="9.51659" class="coord-submitter" type="button">Testing 3: Salvatorenstrasse</button></div>
-<div><button lat="46.85430" lon="9.52841" class="coord-submitter" type="button">Bahnhof Chur</button></div>
-<div><button lat="46.85286" lon="9.51322" class="coord-submitter" type="button">HTW Hauptgebäude</button></div>
-<div><button lat="46.85381" lon="9.51410" class="coord-submitter" type="button">HTW Gebäude B</button></div>
-<div><button lat="46.84785" lon="9.50129" class="coord-submitter" type="button">Medienhaus</button></div>
-<div><button lat="46.85484" lon="9.51539" class="coord-submitter" type="button">Pizzeria Dieci Chur</button></div>
-<div><button lat="46.85516" lon="9.52035" class="coord-submitter" type="button">Bäckerei Konditorei Nietlispach</button></div>
-<p></p>
-<div>To stop routing, press the following button:</div>
-<div><button id="killer-button" type="button">Stop Routing</button></div>
-<p></p>
-<div>To shutdown, press the following button:</div>
-<div><button id="shutdown-button" type="button">Shutdown</button></div>
+            // Changes text in website when ready
+            /*
+            setInterval(function() {
+                $("#status").load("{{url_for('static',filename='text/status.txt')}}")
+            }, 1000);
+            */
 
-<script type="text/javascript">
-function send_coords(el) {
-	$.ajax({type: "POST", url: "router?lat=" + el.attr("lat") + "&lon=" + el.attr("lon"),
-		success:function(result){
-			// do this in case of success
-	}});
-}
+            $(".coord-submitter").click(function(e){
+                e.preventDefault();
+                send_coords($(this));
+            });
 
-// inspired by https://stackoverflow.com/a/35203359
+            $("#killer-button").click(function(e){
+                e.preventDefault();
+                $.ajax({type: "POST", url: "/kill",
+                    success:function(result){
+                    // do this in case of success
+                }});
+            });
 
-$(document).ready(function(){
-	$(".coord-submitter").click(function(e){
-		e.preventDefault();
-		send_coords($(this));
-	});
-
-	$("#killer-button").click(function(e){
-		e.preventDefault();
-		$.ajax({type: "POST", url: "/kill",
-			success:function(result){
-			// do this in case of success
-		}});
-	});
-
-	$("#shutdown-button").click(function(e){
-		e.preventDefault();
-		$.ajax({type: "POST", url: "/shutdown",
-			success:function(result){
-			// do this in case of success
-		}});
-	});
-});
-
- </script>
+            $("#shutdown-button").click(function(e){
+                e.preventDefault();
+                $.ajax({type: "POST", url: "/shutdown",
+                    success:function(result){
+                    // do this in case of success
+                }});
+            });
+        });
+     </script>
+</body>
+</html>

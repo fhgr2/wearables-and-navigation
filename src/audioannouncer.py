@@ -50,6 +50,8 @@ class AudioAnnouncer(AbstractAnnouncer):
         self.__say("You have arrived at your destination.")
 
     def departure(self, exit_number):
+        #f = open("static/text/status.txt", "w")
+        #f.write("Status: ready")
         self.__say("Start your journey.")
 
     def unknown(self, exit_number):

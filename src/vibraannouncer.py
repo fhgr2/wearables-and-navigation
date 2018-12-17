@@ -157,5 +157,3 @@ class VibraAnnouncer(AbstractAnnouncer):
         time.sleep(self.__impulsdauer)
         self.__vm_middle.off()
         time.sleep(self.__nachpause)
-
-

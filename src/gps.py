@@ -20,16 +20,20 @@ class Gps():
         return self.__packet # only used for the retry decorator, don't use this value
             
     def fetch_get_pos_bearing(self):
+        #self.__logger.info("mv, bei fetch_get_pos_bearing") # MV
+        #self.__logger.info("mv, self: " + str(self)) # MV
         self.fetch()
+        #self.__logger.info("mv, nach self.fetch") # MV
+        #self.__logger.info("mv, Aufruf: self.get_pos_bearing()") # MV
         return self.get_pos_bearing()
 
     def get_pos_bearing(self):
         """
         Return cached position and bearing
         """
-
+        #self.__logger.info("mv, In get_pos_bearing(self)") # MV
         packet = self.__packet
-
+        
         self.__logger.debug("self.__packet=" + str(packet))
         self.__logger.debug("self.__packet.position()=" + str(packet.position()))
         self.__logger.debug("self.__packet.track=" + str(packet.track))
@@ -40,5 +44,4 @@ class Gps():
     @retry(wait=wait_fixed(0.5))
     def __connect(self):
         self.__logger.info("Going to connect to gpsd, ip=" + config.gpsd['ip'] + " port=" + str(config.gpsd['port']))
-
         gpsd.connect(host=config.gpsd['ip'], port=config.gpsd['port'])

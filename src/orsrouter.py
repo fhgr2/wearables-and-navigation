@@ -65,7 +65,6 @@ class OrsRouter(AbstractRouter):
     def __is_position_on_track(self):
         return GeometryHelper.get_distance(self.__cur, self.__track) < config.routing['wrong_way_threshold']
 
-
     def __fetch_route(self):
         self.__logger.info("OrsRouter.__fetch_route() called, start=" + str(self.__start) + "start_bear=" + str(self.__start_bear) + "destination=" + str(self.__destination))
         in_coords = ((self.__start.x,self.__start.y), (self.__destination.x,self.__destination.y))
