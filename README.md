@@ -249,3 +249,6 @@ Password: ***REMOVED***
 ### Changes 2018-11-20 / mv
 - changed in src/config.py in routing ors_routing_profile from cycling-safe to cycling-regular
 - added testing routes in src/templates/index.html
+### Changes 2019-02-22 / mv
+- changed in src/audioannouncer.py, vibraannouncer.py, logannouncer.py, abstractannouncer.py due to changed commands
+- added testing routes in src/templates/index.html

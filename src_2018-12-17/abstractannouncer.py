@@ -50,16 +50,6 @@ class AbstractAnnouncer(ABC):
     def departure():
         pass
 
-# 2019_02_22: new
-    @abstractmethod
-    def keep_left():
-        pass
-
-# 2019_02_22: new
-    @abstractmethod
-    def keep_right():
-        pass
-
     @abstractmethod
     def unknown():
         pass
@@ -80,12 +70,8 @@ class AbstractAnnouncer(ABC):
             9: self.uturn,
             10: self.arrival,
             11: self.departure,
-            #12: self.unknown
-            12: self.keep_left,
-            13: self.keep_right,
-            14: self.unknown
+            12: self.unknown
             # default value for non-existing keys is defined outside
-            # 2019_02_22: 12, 13 14 added, changed
         }
 
     def announce(self, announcement_information: dict):

@@ -44,14 +44,6 @@ class LogAnnouncer(AbstractAnnouncer):
     def departure(self, exit_number):
         self.__logger.info("LogAnnouncer.departure() called")
 
-# 2019_02_22: new
-    def keep_left(self, exit_number):
-        self.__logger.info("LogAnnouncer.keep_left() called")
-
-# 2019_02_22: new
-    def keep_right(self, exit_number):
-        self.__logger.info("LogAnnouncer.keep_right() called")
-
     def unknown(self, exit_number):
         self.__logger.info("LogAnnouncer.unknown() called, exit_number=" + str(exit_number))
 

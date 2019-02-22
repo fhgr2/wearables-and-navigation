@@ -92,10 +92,20 @@ class VibraAnnouncer(AbstractAnnouncer):
         for i in range(6):
             self.__impuls_middle()
 
+# 2019_02_22: changed
     def departure(self, exit_number):
-        self.__impuls_left_right()
-        time.sleep(self.__signalpause)
-        self.__impuls_left_right()
+        #self.__impuls_left_right()
+        #time.sleep(self.__signalpause)
+        #self.__impuls_left_right()
+        pass
+
+# 2019_02_22: new
+    def keep_left(self, exit_number):
+        pass
+
+# 2019_02_22: new
+    def keep_right(self, exit_number):
+        pass
 
     def unknown(self, exit_number):
         self.__logger.info("VibraAnnouncer.unknown() called, exit_number=" + str(exit_number))

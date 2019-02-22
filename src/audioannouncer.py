@@ -34,8 +34,9 @@ class AudioAnnouncer(AbstractAnnouncer):
     def slight_right(self, exit_number):
         self.__say("Turn slightly right.")
 
+# 2019_02_22: changed
     def continue_way(self, exit_number):
-        self.__say("Continue straight.")
+        self.__say("Just information: continue straight.")
 
     def enter_roundabout(self, exit_number):
         self.__say("Enter roundabout and use exit number.")
@@ -52,8 +53,18 @@ class AudioAnnouncer(AbstractAnnouncer):
     def departure(self, exit_number):
         #f = open("static/text/status.txt", "w")
         #f.write("Status: ready")
-        self.__say("Start your journey.")
+        #self.__say("Start your journey.")
+        self.__say("Just information: recalculating journey.")
 
+# 2019_02_22: new
+    def keep_left(self, exit_number):
+        self.__say("Just information: keep left.")
+
+# 2019_02_22: new
+    def keep_right(self, exit_number):
+        self.__say("Just information: keep right.")
+
+# 2019_02_22: changed
     def unknown(self, exit_number):
-        self.__say("Unknown message.")
+        self.__say("Just information: unable to find a route.")
 
