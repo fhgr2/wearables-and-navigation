@@ -69,8 +69,14 @@ class VibraAnnouncer(AbstractAnnouncer):
         self.__impuls_right_front()
         self.__impuls_right_front()
 
+# 2019_02_23: changed
     def continue_way(self, exit_number):
-        pass
+        #pass
+        self.__impuls_straight()
+        self.__impuls_straight()
+        time.sleep(self.__signalpause)
+        self.__impuls_straight()
+        self.__impuls_straight()
 
     def enter_roundabout(self, exit_number):
         for i in range(exit_number):
@@ -121,13 +127,22 @@ class VibraAnnouncer(AbstractAnnouncer):
         self.__vm_right_front.off()
         self.__vm_right_back.off()
         time.sleep(self.__nachpause)
-        
+
+# 2019_02_23: new
+    def __impuls_straight(self):
+        self.__vm_left_front.on()
+        self.__vm_right_front.on()
+        time.sleep(self.__impulsdauer)
+        self.__vm_left_front.off()
+        self.__vm_right_front.off()
+        time.sleep(self.__nachpause)
+
     def __impuls_left_front(self):
         self.__vm_left_front.on()
         time.sleep(self.__impulsdauer)
         self.__vm_left_front.off()
         time.sleep(self.__nachpause)
-        
+
     def __impuls_left(self):
         self.__vm_left_front.on()
         self.__vm_left_back.on()
@@ -135,7 +150,7 @@ class VibraAnnouncer(AbstractAnnouncer):
         self.__vm_left_front.off()
         self.__vm_left_back.off()
         time.sleep(self.__nachpause)
-        
+
     def __impuls_left_back(self):
         self.__vm_left_back.on()
         time.sleep(self.__impulsdauer)

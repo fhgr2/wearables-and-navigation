@@ -34,9 +34,9 @@ class AudioAnnouncer(AbstractAnnouncer):
     def slight_right(self, exit_number):
         self.__say("Turn slightly right.")
 
-# 2019_02_22: changed
+# 2019_02_23: changed
     def continue_way(self, exit_number):
-        self.__say("Just information: continue straight.")
+        self.__say("Continue straight.")
 
     def enter_roundabout(self, exit_number):
         self.__say("Enter roundabout and use exit number.")
