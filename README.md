@@ -252,3 +252,6 @@ Password: ***REMOVED***
 ### Changes 2019-02-22 / mv
 - changed in src/audioannouncer.py, vibraannouncer.py, logannouncer.py, abstractannouncer.py due to changed commands
 - added testing routes in src/templates/index.html
+### Changes 2019-02-23 / mv
+- changed in src/audioannouncer.py, vibraannouncer.py, added straight command
+- added testing routes in src/templates/index.html
