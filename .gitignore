@@ -1,4 +1,4 @@
 infos/
 **/__pycache__/
-src_2018-12-17/**
-doc/openrouteservice_API.txt
+/src_2018-12-17/**
+/doc/openrouteservice_API.txt
