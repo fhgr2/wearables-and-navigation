@@ -22,7 +22,7 @@ Enable SSH:
 sudo raspi-config # -> 5 Interfacing Options -> P2 SSH -> Yes
 ```
 
-Change password to "***REMOVED***":
+Do not forget to change the password
 ```
 passwd
 ```
@@ -223,7 +223,7 @@ Since user-chosen destination coordinates may not exactly be reached using a rou
 
 ## Links
 
-- https://docs.google.com/document/d/***REMOVED***/edit
+- none
 
 
 ## Accounts
@@ -231,17 +231,16 @@ Since user-chosen destination coordinates may not exactly be reached using a rou
 ### OpenRouteService
 
 ```
-htw:***REMOVED***
+Please use your own account and your own API-Key.
 
-API-Key:
-***REMOVED***
+
 ```
 
 ### Raspberry Pi Zero W
 
 ```
-Username: pi
-Password: ***REMOVED***
+Username: depending on your configuration
+Password: depending on your configuration
 ```
 ## Software Versions
 - Openrouteservice: 4.7
@@ -255,3 +254,6 @@ Password: ***REMOVED***
 ### Changes 2019-02-23 / mv
 - changed in src/audioannouncer.py, vibraannouncer.py, added straight command
 - added testing routes in src/templates/index.html
+### Changes 2019-04-03 / mv
+- changed arrival signal in src/vibraannouncer.py. Changed length of signal (impulsdauer) to 1s. Minor changes in control_haptic_with_keyboard_0620.py
+- changed testing routes in src/templates/index.html

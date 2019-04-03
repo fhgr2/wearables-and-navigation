@@ -94,9 +94,12 @@ class VibraAnnouncer(AbstractAnnouncer):
                 self.__impuls_middle()
             time.sleep(self.__signalpause)
 
+# 2019_04_03: changed, added left and right
     def arrival(self, exit_number):
         for i in range(6):
             self.__impuls_middle()
+            self.__impuls_left()
+            self.__impuls_right()
 
 # 2019_02_22: changed
     def departure(self, exit_number):

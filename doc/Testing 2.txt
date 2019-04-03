@@ -1,0 +1,29 @@
+1) Testing 1: Gabentempel (bleibt)
+2) Testing 2: Felsenaustrasse (bleibt) 
+3) Testing 3: Giacomettostrasse (neu)
+	46.8624, 9.5227 
+4) Testing 4: Belmont Post (neu)
+	46.86152, 9.52625
+
+<div><button lat="46.84942" lon="9.504367" class="coord-submitter" type="button">Medienhaus, weg</button></div>
+<div><button lat="46.848004" lon="9.501813" class="coord-submitter" type="button">Testing Medienhaus, zum</button></div>
+
+
+
+
+5) Impulsdauer erhöhen (impulsdauer" : 0.65 => 1.00)
+6) Meldung Geradeaus muss kommen (check)
+7) Roundabout: genauer Ablauf checken
+8) Check: control_haptic_with_keyboard_0620.py, anpassen an richtige Befehle)
+9) Schluss: alle Sensoren einschalten:
+
+    def arrival(self, exit_number):
+        for i in range(6):
+            self.__impuls_middle()
+            self.__impuls_left()
+            self.__impuls_right()
+
+
+
+
+

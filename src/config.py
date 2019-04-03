@@ -10,7 +10,7 @@ routing = {
 }
 
 vibration = {
-    "impulsdauer" : 0.65, # Länge eines Impulses
+    "impulsdauer" : 1.00, # Länge eines Impulses, changed from 0.65
     "nachpause"   : 0.1,  # Pause zwischen den einzelnen Impulsen
     "signalpause" : 1     # Pausenlänge in der Signalisierung
 }

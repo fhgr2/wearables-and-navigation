@@ -18,8 +18,8 @@ vm_m.off()
 
 
 # Impulsdauer, Nachpause und Pausenlänge festlegen
-impulsdauer = 0.65	# Länge eines Impulses
-nachpause = 0.1	# Bause zwischen den einzelnen Impulsen
+impulsdauer = 1.00	# Länge eines Impulses, changed from 0.65
+nachpause = 0.1	# Pause zwischen den einzelnen Impulsen
 signalpause = 1 # Pausenlänge in der Signalisierung
 
 
@@ -44,15 +44,14 @@ def impuls_left_right():
 	time.sleep(nachpause)
 #	print('nachpause fertig')
 #	print(datetime.datetime.now().time())
-	
-	
+
 def impuls_left_front():
 	print('impuls left front')
 	vm_lf.on()
 	time.sleep(impulsdauer)
 	vm_lf.off()
 	time.sleep(nachpause)
-	
+
 def impuls_left():
 	print('impuls left')
 	vm_lf.on()
@@ -61,14 +60,13 @@ def impuls_left():
 	vm_lf.off()
 	vm_lb.off()
 	time.sleep(nachpause)
-	
+
 def impuls_left_back():
 	print('impuls left back')
 	vm_lb.on()
 	time.sleep(impulsdauer)
 	vm_lb.off()
 	time.sleep(nachpause)
-
 
 def impuls_right_front():
 	print('impuls right front')
@@ -90,9 +88,8 @@ def impuls_right_back():
 	print('impuls right back')
 	vm_rb.on()
 	time.sleep(impulsdauer)
-	vm_rb.off() ############################################
+	vm_rb.off()
 	time.sleep(nachpause)
-	
 
 def impuls_middle():
 	print('impuls middle')
@@ -100,7 +97,6 @@ def impuls_middle():
 	time.sleep(impulsdauer)
 	vm_m.off()
 	time.sleep(nachpause)
-	
 
 #---------------------------------------
 # signaling command functions
@@ -224,11 +220,23 @@ def ut():
 # arrived
 def arr():
 	impuls_middle()
+	impuls_left()
+	impuls_right()
 	impuls_middle()
+	impuls_left()
+	impuls_right()
 	impuls_middle()
+	impuls_left()
+	impuls_right()
 	impuls_middle()
+	impuls_left()
+	impuls_right()
 	impuls_middle()
+	impuls_left()
+	impuls_right()
 	impuls_middle()
+	impuls_left()
+	impuls_right()
 
 # end
 

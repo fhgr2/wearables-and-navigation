@@ -23,7 +23,7 @@ class OrsRouter(AbstractRouter):
         self.__start_bear = start_bear
         self.__destination = destination
         self.__announcer_manager = announcer_manager
-        self.__client = openrouteservice.Client(key='***REMOVED***', retry_timeout=3600)
+        self.__client = openrouteservice.Client(key='key_here', retry_timeout=3600)
 
         self.__calculate_routing_information()
 
